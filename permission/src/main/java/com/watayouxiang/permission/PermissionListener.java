@@ -11,7 +11,7 @@ public interface PermissionListener {
     /**
      * 被拒绝权限
      *
-     * @param deniedPermissions
+     * @param deniedPermissions 被拒绝权限集合
      */
     void onDenied(List<String> deniedPermissions);
 }
