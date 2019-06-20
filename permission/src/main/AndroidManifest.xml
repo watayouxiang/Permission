@@ -1,0 +1,11 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.watayouxiang.permission">
+
+    <application>
+        <activity
+            android:name=".AppSettingsDialogHolderActivity"
+            android:exported="false"
+            android:label=""
+            android:theme="@style/PermissionsHelper.Transparent" />
+    </application>
+</manifest>
