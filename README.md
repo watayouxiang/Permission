@@ -2,9 +2,7 @@
 
 > Android Permission（安卓权限申请工具）
 
-## 使用
-
-gradle 引入
+## 1.gradle引入
 
 ```
 implementation 'com.watayouxiang: Permission:1.0.0'
@@ -12,7 +10,7 @@ implementation 'com.watayouxiang: Permission:1.0.0'
 
 最新版本请查看：[jcenter仓库](https://dl.bintray.com/watayouxiang/maven/com/watayouxiang/Permission/)
 	
-### 1.权限申请工具的使用
+## 2.使用示例代码
 
 ```
 //如果是Activity中申请权限用ActivityPermissionHelper
@@ -51,6 +49,6 @@ protected void onActivityResult(int requestCode, int resultCode, @Nullable Inten
 }
 ```
 
-## 参考
+## 3.参考
 
 - 权限工具参考：[https://github.com/googlesamples/easypermissions](https://github.com/googlesamples/easypermissions)
