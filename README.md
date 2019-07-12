@@ -4,9 +4,7 @@
 
 ## 1.gradle引入
 
-```
 implementation 'com.watayouxiang: Permission:[版本号](https://dl.bintray.com/watayouxiang/maven/com/watayouxiang/Permission/)'
-```
 	
 ## 2.使用示例代码
 
