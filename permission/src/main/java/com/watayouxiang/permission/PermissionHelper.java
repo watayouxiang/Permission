@@ -30,13 +30,17 @@ abstract class PermissionHelper<T> {
      * @param deniedPermissions 被拒绝的权限列表
      * @return 是否存在永远被拒绝的权限
      */
-    private boolean getDisablePermissions(@NonNull List<String> deniedPermissions) {
-        if (isPermissionVersion()) {
+    private @NonNull
+    List<String> getDisablePermissions(List<String> deniedPermissions) {
+        List<String> disablePermissions = new ArrayList<>();
+        if (deniedPermissions != null && isPermissionVersion()) {
             for (String deniedPermission : deniedPermissions) {
-                return !ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission);
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
+                    disablePermissions.add(deniedPermission);
+                }
             }
         }
-        return false;
+        return disablePermissions;
     }
 
     /**
@@ -141,12 +145,13 @@ abstract class PermissionHelper<T> {
                 //全部都同意了
                 mPermissionListener.onGranted();
             } else {
-                if (getDisablePermissions(deniedPermissions)) {
-                    //存在永远被拒绝权限
-                    showAppSettingDialog(deniedPermissions, AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
-                } else {
-                    //存在普通被拒绝权限
+                List<String> disablePermissions = getDisablePermissions(deniedPermissions);
+                if (disablePermissions.isEmpty()) {
+                    //全部是被拒绝权限
                     mPermissionListener.onDenied(deniedPermissions);
+                } else {
+                    //存在被禁用的权限
+                    showAppSettingDialog(deniedPermissions, AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
                 }
             }
         }
