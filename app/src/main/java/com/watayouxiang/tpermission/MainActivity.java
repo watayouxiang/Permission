@@ -16,7 +16,6 @@ import com.watayouxiang.permission.PermissionListener;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
-
     @Override
     protected ListData getListData() {
         return new ListData().addClick(

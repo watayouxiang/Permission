@@ -30,8 +30,8 @@ abstract class PermissionHelper<T> {
      * @param deniedPermissionList 被拒绝的权限列表
      * @return 是否存在永远被拒绝的权限
      */
-    private boolean somePermissionPermanentlyDenied(List<String> deniedPermissionList) {
-        if (needPermissionVersion()) {
+    private boolean havePermanentlyDenied(List<String> deniedPermissionList) {
+        if (isPermissionVersion()) {
             for (String deniedPermission : deniedPermissionList) {
                 return !ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission);
             }
@@ -48,7 +48,7 @@ abstract class PermissionHelper<T> {
     private List<String> getDeniedPermissions(String[] permissions) {
         //获取所有未同意的权限
         List<String> deniedPermissions = new ArrayList<>();
-        if (needPermissionVersion()) {
+        if (isPermissionVersion()) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permission);
@@ -63,7 +63,7 @@ abstract class PermissionHelper<T> {
      *
      * @return 该版本是否需要申请权限
      */
-    boolean needPermissionVersion() {
+    boolean isPermissionVersion() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
@@ -125,7 +125,7 @@ abstract class PermissionHelper<T> {
                 //全部都同意了
                 mPermissionListener.onGranted();
             } else {
-                if (somePermissionPermanentlyDenied(deniedPermissions)) {
+                if (havePermanentlyDenied(deniedPermissions)) {
                     //存在永远被拒绝权限
                     showAppSettingDialog(deniedPermissions, AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
                 } else {
