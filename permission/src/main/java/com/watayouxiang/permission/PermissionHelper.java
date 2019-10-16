@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 abstract class PermissionHelper<T> {
@@ -22,6 +23,23 @@ abstract class PermissionHelper<T> {
 
     T getHost() {
         return mHost;
+    }
+
+    /**
+     * 数组转列表
+     *
+     * @param array 数组
+     * @param <DT>  数据类型
+     * @return 列表
+     */
+    @SafeVarargs
+    private final <DT> List<DT> array2List(DT... array) {
+        if (array != null) {
+            List<DT> list = new ArrayList<>();
+            Collections.addAll(list, array);
+            return list;
+        }
+        return null;
     }
 
     /**
@@ -111,6 +129,14 @@ abstract class PermissionHelper<T> {
      */
     protected abstract void startRequestPermissions(List<String> deniedPermissions, int requestCode);
 
+    /**
+     * 打开App设置弹窗
+     * <p>
+     * 结果将回调至：{@link #onActivityResult(int, int, Intent)}
+     *
+     * @param deniedPermissions 被拒绝的权限列表
+     * @param requestCode       请求码
+     */
     protected abstract void showAppSettingDialog(List<String> deniedPermissions, int requestCode);
 
     // ============================================================================
@@ -118,8 +144,8 @@ abstract class PermissionHelper<T> {
     // ============================================================================
 
     private final int DEFAULT_PERMISSION_REQ_CODE = 13031;
-    private String[] mPermissions;
     private PermissionListener mPermissionListener;
+    private List<String> mDeniedPermissions;
 
     /**
      * 请求权限
@@ -128,14 +154,13 @@ abstract class PermissionHelper<T> {
      * @param listener    监听器
      */
     public void requestPermissions(String[] permissions, PermissionListener listener) {
-        mPermissions = permissions;
-        mPermissionListener = listener;
         List<String> deniedPermissions = getDeniedPermissions(permissions);
         if (deniedPermissions.isEmpty()) {
-            if (mPermissionListener != null) {
-                mPermissionListener.onGranted();
+            if (listener != null) {
+                listener.onGranted();
             }
         } else {
+            mPermissionListener = listener;
             startRequestPermissions(deniedPermissions, DEFAULT_PERMISSION_REQ_CODE);
         }
     }
@@ -151,15 +176,20 @@ abstract class PermissionHelper<T> {
         if (requestCode == DEFAULT_PERMISSION_REQ_CODE) {
             List<String> deniedPermissions = getDeniedPermissions(permissions, grantResults);
             if (deniedPermissions.isEmpty()) {
-                //全部都同意了
-                mPermissionListener.onGranted();
+                //全部同意了
+                if (mPermissionListener != null) {
+                    mPermissionListener.onGranted();
+                }
             } else {
                 List<String> disablePermissions = getDisablePermissions(deniedPermissions);
                 if (disablePermissions.isEmpty()) {
-                    //全部是被拒绝权限
-                    mPermissionListener.onDenied(deniedPermissions);
+                    //全是"被拒绝的权限"
+                    if (mPermissionListener != null) {
+                        mPermissionListener.onDenied(deniedPermissions);
+                    }
                 } else {
-                    //存在被禁用的权限
+                    //存在"被禁用的权限"
+                    mDeniedPermissions = deniedPermissions;
                     showAppSettingDialog(deniedPermissions, AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
                 }
             }
@@ -175,7 +205,7 @@ abstract class PermissionHelper<T> {
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            List<String> deniedPermissions = getDeniedPermissions(mPermissions);
+            List<String> deniedPermissions = getDeniedPermissions(mDeniedPermissions);
             if (deniedPermissions.isEmpty()) {
                 mPermissionListener.onGranted();
             } else {
