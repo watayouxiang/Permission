@@ -25,14 +25,14 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 是否存在永远被拒绝的权限
+     * 是否存在禁用的权限
      *
-     * @param deniedPermissionList 被拒绝的权限列表
+     * @param deniedPermissions 被拒绝的权限列表
      * @return 是否存在永远被拒绝的权限
      */
-    private boolean havePermanentlyDenied(List<String> deniedPermissionList) {
+    private boolean getDisablePermissions(@NonNull List<String> deniedPermissions) {
         if (isPermissionVersion()) {
-            for (String deniedPermission : deniedPermissionList) {
+            for (String deniedPermission : deniedPermissions) {
                 return !ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission);
             }
         }
@@ -45,13 +45,35 @@ abstract class PermissionHelper<T> {
      * @param permissions 未筛选的权限
      * @return 被拒绝的权限集合
      */
-    private List<String> getDeniedPermissions(String[] permissions) {
-        //获取所有未同意的权限
+    private @NonNull
+    List<String> getDeniedPermissions(String[] permissions) {
         List<String> deniedPermissions = new ArrayList<>();
-        if (isPermissionVersion()) {
+        if (permissions != null && isPermissionVersion()) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permission);
+                }
+            }
+        }
+        return deniedPermissions;
+    }
+
+    /**
+     * 筛选出被拒绝的权限
+     *
+     * @param permissions  权限列表
+     * @param grantResults 权限列表的申请结果
+     * @return 拒绝的权限列表
+     */
+    private @NonNull
+    List<String> getDeniedPermissions(String[] permissions, int[] grantResults) {
+        List<String> deniedPermissions = new ArrayList<>();
+        if (permissions != null && grantResults != null
+                && permissions.length == grantResults.length
+                && isPermissionVersion()) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permissions[i]);
                 }
             }
         }
@@ -93,15 +115,15 @@ abstract class PermissionHelper<T> {
      * @param permissions 权限数组
      * @param listener    监听器
      */
-    public void requestPermissions(String[] permissions, PermissionListener listener) {
+    public void requestPermissions(@NonNull String[] permissions, PermissionListener listener) {
         List<String> deniedPermissions = getDeniedPermissions(permissions);
-        if (!deniedPermissions.isEmpty()) {
+        if (deniedPermissions.isEmpty()) {
+            listener.onGranted();
+        } else {
             mPermissions = permissions;
             mPermissionListener = listener;
             //申请未同意的权限，结果将回调至 onRequestPermissionsResult
             startRequestPermissions(deniedPermissions, DEFAULT_PERMISSION_REQ_CODE);
-        } else {
-            listener.onGranted();
         }
     }
 
@@ -114,18 +136,12 @@ abstract class PermissionHelper<T> {
      */
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == DEFAULT_PERMISSION_REQ_CODE) {
-            //获取"被拒绝权限"
-            List<String> deniedPermissions = new ArrayList<>();
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions.add(permissions[i]);
-                }
-            }
+            List<String> deniedPermissions = getDeniedPermissions(permissions, grantResults);
             if (deniedPermissions.isEmpty()) {
                 //全部都同意了
                 mPermissionListener.onGranted();
             } else {
-                if (havePermanentlyDenied(deniedPermissions)) {
+                if (getDisablePermissions(deniedPermissions)) {
                     //存在永远被拒绝权限
                     showAppSettingDialog(deniedPermissions, AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
                 } else {
