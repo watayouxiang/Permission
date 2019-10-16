@@ -25,16 +25,16 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 获取被禁用的权限列表
+     * 获取"被禁用的权限"
      *
-     * @param deniedPermissions 权限列表
+     * @param permissions 权限列表
      * @return 被禁用的权限列表
      */
     private @NonNull
-    List<String> getDisablePermissions(List<String> deniedPermissions) {
+    List<String> getDisablePermissions(List<String> permissions) {
         List<String> disablePermissions = new ArrayList<>();
-        if (deniedPermissions != null && isPermissionVersion()) {
-            for (String deniedPermission : deniedPermissions) {
+        if (permissions != null && isPermissionVersion()) {
+            for (String deniedPermission : permissions) {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
                     disablePermissions.add(deniedPermission);
                 }
@@ -44,7 +44,7 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 获取被拒绝的权限列表
+     * 获取"被拒绝的权限"
      *
      * @param permissions 权限列表
      * @return 被拒绝的权限列表
@@ -63,7 +63,7 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 获取被拒绝的权限列表
+     * 获取"被拒绝的权限"
      *
      * @param permissions  权限列表
      * @param grantResults 权限列表的申请结果
@@ -119,7 +119,7 @@ abstract class PermissionHelper<T> {
      * @param permissions 权限数组
      * @param listener    监听器
      */
-    public void requestPermissions(@NonNull String[] permissions, PermissionListener listener) {
+    public void requestPermissions(String[] permissions, PermissionListener listener) {
         List<String> deniedPermissions = getDeniedPermissions(permissions);
         if (deniedPermissions.isEmpty()) {
             listener.onGranted();
