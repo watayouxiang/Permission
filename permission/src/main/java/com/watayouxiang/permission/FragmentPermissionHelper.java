@@ -23,9 +23,9 @@ public class FragmentPermissionHelper extends PermissionHelper<Fragment> {
     }
 
     @Override
-    protected void startRequestPermissions(List<String> requestPermissions, int requestCode) {
+    protected void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
         if (isPermissionVersion()) {
-            getHost().requestPermissions(requestPermissions.toArray(new String[0]), requestCode);
+            getHost().requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
         }
     }
 

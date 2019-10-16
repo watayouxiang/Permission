@@ -23,9 +23,9 @@ public class ActivityPermissionHelper extends PermissionHelper<Activity> {
     }
 
     @Override
-    protected void startRequestPermissions(List<String> requestPermissions, int requestCode) {
+    protected void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
         if (isPermissionVersion()) {
-            ActivityCompat.requestPermissions(getActivity(), requestPermissions.toArray(new String[0]), requestCode);
+            ActivityCompat.requestPermissions(getActivity(), deniedPermissions.toArray(new String[0]), requestCode);
         }
     }
 

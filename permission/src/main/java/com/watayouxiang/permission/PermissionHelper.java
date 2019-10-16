@@ -101,7 +101,15 @@ abstract class PermissionHelper<T> {
 
     protected abstract Activity getActivity();
 
-    protected abstract void startRequestPermissions(List<String> requestPermissions, int requestCode);
+    /**
+     * 申请"被拒绝的权限"
+     * <p>
+     * 结果将回调至：{@link #onRequestPermissionsResult(int, String[], int[])}
+     *
+     * @param deniedPermissions 被拒绝的权限列表
+     * @param requestCode       请求码
+     */
+    protected abstract void startRequestPermissions(List<String> deniedPermissions, int requestCode);
 
     protected abstract void showAppSettingDialog(List<String> deniedPermissions, int requestCode);
 
@@ -120,13 +128,14 @@ abstract class PermissionHelper<T> {
      * @param listener    监听器
      */
     public void requestPermissions(String[] permissions, PermissionListener listener) {
+        mPermissions = permissions;
+        mPermissionListener = listener;
         List<String> deniedPermissions = getDeniedPermissions(permissions);
         if (deniedPermissions.isEmpty()) {
-            listener.onGranted();
+            if (mPermissionListener != null) {
+                mPermissionListener.onGranted();
+            }
         } else {
-            mPermissions = permissions;
-            mPermissionListener = listener;
-            //申请未同意的权限，结果将回调至 onRequestPermissionsResult
             startRequestPermissions(deniedPermissions, DEFAULT_PERMISSION_REQ_CODE);
         }
     }
