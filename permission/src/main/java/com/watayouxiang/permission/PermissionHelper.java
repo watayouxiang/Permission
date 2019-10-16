@@ -25,10 +25,10 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 是否存在禁用的权限
+     * 获取被禁用的权限列表
      *
-     * @param deniedPermissions 被拒绝的权限列表
-     * @return 是否存在永远被拒绝的权限
+     * @param deniedPermissions 权限列表
+     * @return 被禁用的权限列表
      */
     private @NonNull
     List<String> getDisablePermissions(List<String> deniedPermissions) {
@@ -44,10 +44,10 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 筛选出被拒绝的权限
+     * 获取被拒绝的权限列表
      *
-     * @param permissions 未筛选的权限
-     * @return 被拒绝的权限集合
+     * @param permissions 权限列表
+     * @return 被拒绝的权限列表
      */
     private @NonNull
     List<String> getDeniedPermissions(String[] permissions) {
@@ -63,11 +63,11 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 筛选出被拒绝的权限
+     * 获取被拒绝的权限列表
      *
      * @param permissions  权限列表
      * @param grantResults 权限列表的申请结果
-     * @return 拒绝的权限列表
+     * @return 被拒绝的权限列表
      */
     private @NonNull
     List<String> getDeniedPermissions(String[] permissions, int[] grantResults) {
