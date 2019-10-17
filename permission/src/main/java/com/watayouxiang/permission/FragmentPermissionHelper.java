@@ -28,12 +28,4 @@ public class FragmentPermissionHelper extends PermissionHelper<Fragment> {
             getHost().requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
         }
     }
-
-    @Override
-    protected void showAppSettingDialog(int requestCode) {
-        new AppSettingsDialog.Builder(getHost())
-                .setRequestCode(requestCode)
-                .build()
-                .show();
-    }
 }

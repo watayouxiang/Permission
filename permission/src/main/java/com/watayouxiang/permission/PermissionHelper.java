@@ -2,11 +2,11 @@ package com.watayouxiang.permission;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -62,25 +62,6 @@ abstract class PermissionHelper<T> {
     }
 
     /**
-     * 获取"被禁用的权限"
-     *
-     * @param permissions 权限列表
-     * @return 被禁用的权限列表
-     */
-    private @NonNull
-    List<String> getDisablePermissions(List<String> permissions) {
-        List<String> disablePermissions = new ArrayList<>();
-        if (permissions != null && isPermissionVersion()) {
-            for (String deniedPermission : permissions) {
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
-                    disablePermissions.add(deniedPermission);
-                }
-            }
-        }
-        return disablePermissions;
-    }
-
-    /**
      * 获取"被拒绝的权限"
      *
      * @param permissions  权限列表
@@ -129,22 +110,12 @@ abstract class PermissionHelper<T> {
      */
     protected abstract void startRequestPermissions(List<String> deniedPermissions, int requestCode);
 
-    /**
-     * 打开App设置弹窗
-     * <p>
-     * 结果将回调至：{@link #onActivityResult(int, int, Intent)}
-     *
-     * @param requestCode 请求码
-     */
-    protected abstract void showAppSettingDialog(int requestCode);
-
     // ============================================================================
     // public methods
     // ============================================================================
 
     private final int DEFAULT_PERMISSION_REQ_CODE = 13031;
     private PermissionListener mPermissionListener;
-    private List<String> mDeniedPermissions;
 
     /**
      * 请求权限
@@ -152,7 +123,7 @@ abstract class PermissionHelper<T> {
      * @param permissions 权限数组
      * @param listener    监听器
      */
-    public void requestPermissions(String[] permissions, PermissionListener listener) {
+    public void requestPermissions(@Nullable String[] permissions, @Nullable PermissionListener listener) {
         List<String> deniedPermissions = getDeniedPermissions(array2List(permissions));
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
@@ -162,6 +133,25 @@ abstract class PermissionHelper<T> {
             mPermissionListener = listener;
             startRequestPermissions(deniedPermissions, DEFAULT_PERMISSION_REQ_CODE);
         }
+    }
+
+    /**
+     * 获取"被禁用的权限"
+     *
+     * @param permissions 权限列表
+     * @return 被禁用的权限列表
+     */
+    public @NonNull
+    List<String> getDisablePermissions(@Nullable List<String> permissions) {
+        List<String> disablePermissions = new ArrayList<>();
+        if (permissions != null && isPermissionVersion()) {
+            for (String deniedPermission : permissions) {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
+                    disablePermissions.add(deniedPermission);
+                }
+            }
+        }
+        return disablePermissions;
     }
 
     // ============================================================================
@@ -178,37 +168,6 @@ abstract class PermissionHelper<T> {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == DEFAULT_PERMISSION_REQ_CODE) {
             List<String> deniedPermissions = getDeniedPermissions(permissions, grantResults);
-            if (deniedPermissions.isEmpty()) {
-                //全部同意了
-                if (mPermissionListener != null) {
-                    mPermissionListener.onGranted();
-                }
-            } else {
-                List<String> disablePermissions = getDisablePermissions(deniedPermissions);
-                if (disablePermissions.isEmpty()) {
-                    //全是"被拒绝的权限"
-                    if (mPermissionListener != null) {
-                        mPermissionListener.onDenied(deniedPermissions);
-                    }
-                } else {
-                    //存在"被禁用的权限"
-                    mDeniedPermissions = deniedPermissions;
-                    showAppSettingDialog(AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
-                }
-            }
-        }
-    }
-
-    /**
-     * App设置页返回后的回调
-     *
-     * @param requestCode 请求码
-     * @param resultCode  结果码
-     * @param data        其他数据
-     */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            List<String> deniedPermissions = getDeniedPermissions(mDeniedPermissions);
             if (deniedPermissions.isEmpty()) {
                 if (mPermissionListener != null) {
                     mPermissionListener.onGranted();

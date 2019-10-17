@@ -1,5 +1,7 @@
 package com.watayouxiang.permission;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public interface PermissionListener {
@@ -13,5 +15,5 @@ public interface PermissionListener {
      *
      * @param deniedPermissions 被拒绝权限集合
      */
-    void onDenied(List<String> deniedPermissions);
+    void onDenied(@NonNull List<String> deniedPermissions);
 }

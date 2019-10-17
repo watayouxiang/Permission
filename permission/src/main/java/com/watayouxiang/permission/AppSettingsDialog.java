@@ -16,8 +16,8 @@ import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-class AppSettingsDialog implements Parcelable {
-    static final int DEFAULT_SETTINGS_REQ_CODE = 16061;
+public class AppSettingsDialog implements Parcelable {
+    public static final int DEFAULT_SETTINGS_REQ_CODE = 16061;
 
     static final String EXTRA_APP_SETTINGS = "extra_app_settings";
 
@@ -76,7 +76,7 @@ class AppSettingsDialog implements Parcelable {
         }
     }
 
-    void show() {
+    public void show() {
         startForResult(AppSettingsDialogHolderActivity.createShowDialogIntent(mContext, this));
     }
 
@@ -148,7 +148,7 @@ class AppSettingsDialog implements Parcelable {
     // Builder
     // ============================================================================
 
-    static class Builder {
+    public static class Builder {
 
         private final Object mActivityOrFragment;
         private final Context mContext;
@@ -161,12 +161,12 @@ class AppSettingsDialog implements Parcelable {
         private int mRequestCode = -1;
         private boolean mOpenInNewTask = false;
 
-        Builder(@NonNull Activity activity) {
+        public Builder(@NonNull Activity activity) {
             mActivityOrFragment = activity;
             mContext = activity;
         }
 
-        Builder(@NonNull Fragment fragment) {
+        public Builder(@NonNull Fragment fragment) {
             mActivityOrFragment = fragment;
             mContext = fragment.getContext();
         }
@@ -238,7 +238,7 @@ class AppSettingsDialog implements Parcelable {
         }
 
         @NonNull
-        AppSettingsDialog build() {
+        public AppSettingsDialog build() {
             mRationale = TextUtils.isEmpty(mRationale) ?
                     mContext.getString(R.string.rationale_ask_again) : mRationale;
             mTitle = TextUtils.isEmpty(mTitle) ?
