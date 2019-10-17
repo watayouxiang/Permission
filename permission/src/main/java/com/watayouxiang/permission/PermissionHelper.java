@@ -134,10 +134,9 @@ abstract class PermissionHelper<T> {
      * <p>
      * 结果将回调至：{@link #onActivityResult(int, int, Intent)}
      *
-     * @param deniedPermissions 被拒绝的权限列表
-     * @param requestCode       请求码
+     * @param requestCode 请求码
      */
-    protected abstract void showAppSettingDialog(List<String> deniedPermissions, int requestCode);
+    protected abstract void showAppSettingDialog(int requestCode);
 
     // ============================================================================
     // public methods
@@ -194,7 +193,7 @@ abstract class PermissionHelper<T> {
                 } else {
                     //存在"被禁用的权限"
                     mDeniedPermissions = deniedPermissions;
-                    showAppSettingDialog(deniedPermissions, AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
+                    showAppSettingDialog(AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE);
                 }
             }
         }

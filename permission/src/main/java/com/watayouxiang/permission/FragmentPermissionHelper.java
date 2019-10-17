@@ -30,7 +30,7 @@ public class FragmentPermissionHelper extends PermissionHelper<Fragment> {
     }
 
     @Override
-    protected void showAppSettingDialog(List<String> deniedPermissions, int requestCode) {
+    protected void showAppSettingDialog(int requestCode) {
         new AppSettingsDialog.Builder(getHost())
                 .setRequestCode(requestCode)
                 .build()
