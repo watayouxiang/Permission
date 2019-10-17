@@ -1,6 +1,6 @@
 <resources>
     <string name="rationale_ask_again">
-        权限被禁用，是否跳转设置页面，手动开启权限？
+        权限被禁用，是否前往应用设置页面，手动开启权限？
     </string>
 
     <string name="title_settings_dialog">开启禁用权限</string>
