@@ -11,7 +11,7 @@ public class SimplePermissionListener implements PermissionListener {
     }
 
     @Override
-    public void onDenied(@NonNull List<String> deniedPermissions, @NonNull List<String> disablePermissions) {
-
+    public void onDenied(@NonNull List<String> deniedPermissions) {
+        
     }
 }

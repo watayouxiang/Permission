@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PermissionUtils {
@@ -22,6 +23,16 @@ public class PermissionUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
+    public static @NonNull
+    List<String> getDeniedPermissions(Context context, String... permissions) {
+        return getDeniedPermissions(context, array2List(permissions));
+    }
+
+    public static @NonNull
+    List<String> getDisablePermissions(Activity activity, String... permissions) {
+        return getDisablePermissions(activity, array2List(permissions));
+    }
+
     /**
      * 获取"被拒绝的权限"
      *
@@ -32,7 +43,7 @@ public class PermissionUtils {
     public static @NonNull
     List<String> getDeniedPermissions(Context context, List<String> permissions) {
         List<String> deniedPermissions = new ArrayList<>();
-        if (context != null && permissions != null && PermissionUtils.isPermissionVersion()) {
+        if (context != null && permissions != null && isPermissionVersion()) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permission);
@@ -52,7 +63,7 @@ public class PermissionUtils {
     public static @NonNull
     List<String> getDisablePermissions(Activity activity, List<String> permissions) {
         List<String> disablePermissions = new ArrayList<>();
-        if (activity != null && permissions != null && PermissionUtils.isPermissionVersion()) {
+        if (activity != null && permissions != null && isPermissionVersion()) {
             for (String deniedPermission : permissions) {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
                     disablePermissions.add(deniedPermission);
@@ -60,5 +71,22 @@ public class PermissionUtils {
             }
         }
         return disablePermissions;
+    }
+
+    /**
+     * 数组转列表
+     *
+     * @param array 数组
+     * @param <DT>  数据类型
+     * @return 列表
+     */
+    @SafeVarargs
+    private static <DT> List<DT> array2List(DT... array) {
+        if (array != null) {
+            List<DT> list = new ArrayList<>();
+            Collections.addAll(list, array);
+            return list;
+        }
+        return null;
     }
 }

@@ -13,58 +13,63 @@ import com.watayouxiang.demoshell.ListData;
 import com.watayouxiang.permission.PermissionHelper;
 import com.watayouxiang.permission.PermissionListener;
 import com.watayouxiang.permission.dialog.AppSettingsDialog;
+import com.watayouxiang.permission.utils.PermissionUtils;
 
 import java.util.List;
 
 public class MainActivity extends ListActivity {
+
+    private String[] mPermission = {
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.CAMERA,
+    };
+    private PermissionHelper mHelper = new PermissionHelper(this);
+
     @Override
     protected ListData getListData() {
-        return new ListData().addClick(
-                "申请非常多的权限",
-                new View.OnClickListener() {
+        return new ListData()
+                .addClick("申请非常多的权限", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         requestPermissions();
                     }
-                });
-    }
-
-    private PermissionHelper mHelper = new PermissionHelper(this);
-
-    private void requestPermissions() {
-        mHelper.requestPermissions(
-                new String[]{
-                        Manifest.permission.READ_PHONE_STATE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.CAMERA,
-                },
-                new PermissionListener() {
+                })
+                .addClick("打开设置弹窗", new View.OnClickListener() {
                     @Override
-                    public void onGranted() {
-                        Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onDenied(@NonNull List<String> deniedPermissions, @NonNull List<String> disablePermissions) {
-                        if (!disablePermissions.isEmpty()) {
+                    public void onClick(View v) {
+                        if (!PermissionUtils.getDisablePermissions(MainActivity.this, mPermission).isEmpty()) {
                             new AppSettingsDialog.Builder(MainActivity.this)
                                     .build()
                                     .show();
-                        } else {
-                            Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    private void requestPermissions() {
+        mHelper.requestPermissions(mPermission, new PermissionListener() {
+            @Override
+            public void onGranted() {
+                Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDenied(@NonNull List<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-
+            List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(MainActivity.this, mPermission);
+            Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 

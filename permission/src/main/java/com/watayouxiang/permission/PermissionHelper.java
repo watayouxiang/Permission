@@ -11,15 +11,14 @@ import androidx.fragment.app.Fragment;
 import com.watayouxiang.permission.utils.PermissionUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PermissionHelper {
+    public static final int DEFAULT_PERMISSION_REQ_CODE = 13031;
+
     private Object mActivityOrFragment;
     private int mRequestCode;
     private PermissionListener mPermissionListener;
-
-    public static final int DEFAULT_PERMISSION_REQ_CODE = 13031;
 
     public PermissionHelper(Activity activity) {
         mActivityOrFragment = activity;
@@ -32,23 +31,6 @@ public class PermissionHelper {
     // ============================================================================
     // private methods
     // ============================================================================
-
-    /**
-     * 数组转列表
-     *
-     * @param array 数组
-     * @param <DT>  数据类型
-     * @return 列表
-     */
-    @SafeVarargs
-    private final <DT> List<DT> array2List(DT... array) {
-        if (array != null) {
-            List<DT> list = new ArrayList<>();
-            Collections.addAll(list, array);
-            return list;
-        }
-        return null;
-    }
 
     /**
      * 获取"被拒绝的权限"
@@ -109,7 +91,7 @@ public class PermissionHelper {
     // ============================================================================
     // public methods
     // ============================================================================
-    
+
     public void requestPermissions(@Nullable String[] permissions, @Nullable PermissionListener listener) {
         requestPermissions(permissions, DEFAULT_PERMISSION_REQ_CODE, listener);
     }
@@ -122,7 +104,7 @@ public class PermissionHelper {
      * @param listener    监听器
      */
     public void requestPermissions(@Nullable String[] permissions, int requestCode, @Nullable PermissionListener listener) {
-        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getActivity(), array2List(permissions));
+        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getActivity(), permissions);
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
                 listener.onGranted();
@@ -150,7 +132,7 @@ public class PermissionHelper {
                 }
             } else {
                 if (mPermissionListener != null) {
-                    mPermissionListener.onDenied(deniedPermissions, PermissionUtils.getDisablePermissions(getActivity(), deniedPermissions));
+                    mPermissionListener.onDenied(deniedPermissions);
                 }
             }
         }
