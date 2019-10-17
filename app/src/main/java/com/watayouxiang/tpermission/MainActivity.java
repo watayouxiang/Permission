@@ -18,7 +18,6 @@ import com.watayouxiang.permission.utils.PermissionUtils;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
-
     private String[] mPermission = {
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
