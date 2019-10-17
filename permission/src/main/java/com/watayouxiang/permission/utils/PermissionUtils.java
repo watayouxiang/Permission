@@ -15,12 +15,20 @@ import java.util.List;
 
 public class PermissionUtils {
     /**
-     * 该版本是否需要申请权限
+     * 数组转列表
      *
-     * @return 该版本是否需要申请权限
+     * @param array 数组
+     * @param <DT>  数据类型
+     * @return 列表
      */
-    public static boolean isPermissionVersion() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    @SafeVarargs
+    private static <DT> List<DT> array2List(DT... array) {
+        if (array != null) {
+            List<DT> list = new ArrayList<>();
+            Collections.addAll(list, array);
+            return list;
+        }
+        return null;
     }
 
     public static @NonNull
@@ -31,6 +39,15 @@ public class PermissionUtils {
     public static @NonNull
     List<String> getDisablePermissions(Activity activity, String... permissions) {
         return getDisablePermissions(activity, array2List(permissions));
+    }
+
+    /**
+     * 该版本是否需要申请权限
+     *
+     * @return 该版本是否需要申请权限
+     */
+    public static boolean isPermissionVersion() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     /**
@@ -71,22 +88,5 @@ public class PermissionUtils {
             }
         }
         return disablePermissions;
-    }
-
-    /**
-     * 数组转列表
-     *
-     * @param array 数组
-     * @param <DT>  数据类型
-     * @return 列表
-     */
-    @SafeVarargs
-    private static <DT> List<DT> array2List(DT... array) {
-        if (array != null) {
-            List<DT> list = new ArrayList<>();
-            Collections.addAll(list, array);
-            return list;
-        }
-        return null;
     }
 }
