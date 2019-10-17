@@ -112,7 +112,7 @@ abstract class PermissionHelper<T> {
     }
 
     // ============================================================================
-    // protected abstract methods
+    // abstract methods
     // ============================================================================
 
     protected abstract Context getContext();
@@ -140,7 +140,7 @@ abstract class PermissionHelper<T> {
     protected abstract void showAppSettingDialog(List<String> deniedPermissions, int requestCode);
 
     // ============================================================================
-    // public concrete methods
+    // public methods
     // ============================================================================
 
     private final int DEFAULT_PERMISSION_REQ_CODE = 13031;
@@ -164,6 +164,10 @@ abstract class PermissionHelper<T> {
             startRequestPermissions(deniedPermissions, DEFAULT_PERMISSION_REQ_CODE);
         }
     }
+
+    // ============================================================================
+    // Activity/Fragment Callback
+    // ============================================================================
 
     /**
      * 请求权限回调
