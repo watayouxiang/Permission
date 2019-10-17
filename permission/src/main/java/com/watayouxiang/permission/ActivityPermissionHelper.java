@@ -1,7 +1,6 @@
 package com.watayouxiang.permission;
 
 import android.app.Activity;
-import android.content.Context;
 
 import androidx.core.app.ActivityCompat;
 
@@ -12,11 +11,6 @@ import java.util.List;
 public class ActivityPermissionHelper extends PermissionHelper<Activity> {
     public ActivityPermissionHelper(Activity host) {
         super(host);
-    }
-
-    @Override
-    protected Context getContext() {
-        return getHost();
     }
 
     @Override

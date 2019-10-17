@@ -1,7 +1,6 @@
 package com.watayouxiang.permission;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
@@ -67,8 +66,6 @@ abstract class PermissionHelper<T> {
     // abstract methods
     // ============================================================================
 
-    protected abstract Context getContext();
-
     protected abstract Activity getActivity();
 
     /**
@@ -95,7 +92,7 @@ abstract class PermissionHelper<T> {
      * @param listener    监听器
      */
     public void requestPermissions(@Nullable String[] permissions, @Nullable PermissionListener listener) {
-        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getContext(), array2List(permissions));
+        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getActivity(), array2List(permissions));
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
                 listener.onGranted();
