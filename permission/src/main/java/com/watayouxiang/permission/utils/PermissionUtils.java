@@ -14,6 +14,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class PermissionUtils {
+    // ============================================================================
+    // 拓展方法
+    // ============================================================================
+
     /**
      * 数组转列表
      *
@@ -40,6 +44,10 @@ public class PermissionUtils {
     List<String> getDisablePermissions(Activity activity, String... permissions) {
         return getDisablePermissions(activity, array2List(permissions));
     }
+
+    // ============================================================================
+    // 基本方法
+    // ============================================================================
 
     /**
      * 获取"被禁用的权限"
