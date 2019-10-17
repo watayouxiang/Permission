@@ -3,12 +3,9 @@ package com.watayouxiang.permission;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.watayouxiang.permission.utils.PermissionUtils;
 
@@ -42,44 +39,6 @@ abstract class PermissionHelper<T> {
             return list;
         }
         return null;
-    }
-
-    /**
-     * 获取"被禁用的权限"
-     *
-     * @param permissions 权限列表
-     * @return 被禁用的权限列表
-     */
-    private @NonNull
-    List<String> getDisablePermissions(@Nullable List<String> permissions) {
-        List<String> disablePermissions = new ArrayList<>();
-        if (permissions != null && PermissionUtils.isPermissionVersion()) {
-            for (String deniedPermission : permissions) {
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
-                    disablePermissions.add(deniedPermission);
-                }
-            }
-        }
-        return disablePermissions;
-    }
-
-    /**
-     * 获取"被拒绝的权限"
-     *
-     * @param permissions 权限列表
-     * @return 被拒绝的权限列表
-     */
-    private @NonNull
-    List<String> getDeniedPermissions(List<String> permissions) {
-        List<String> deniedPermissions = new ArrayList<>();
-        if (permissions != null && PermissionUtils.isPermissionVersion()) {
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions.add(permission);
-                }
-            }
-        }
-        return deniedPermissions;
     }
 
     /**
@@ -136,7 +95,7 @@ abstract class PermissionHelper<T> {
      * @param listener    监听器
      */
     public void requestPermissions(@Nullable String[] permissions, @Nullable PermissionListener listener) {
-        List<String> deniedPermissions = getDeniedPermissions(array2List(permissions));
+        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getContext(), array2List(permissions));
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
                 listener.onGranted();
@@ -167,7 +126,7 @@ abstract class PermissionHelper<T> {
                 }
             } else {
                 if (mPermissionListener != null) {
-                    mPermissionListener.onDenied(deniedPermissions, getDisablePermissions(deniedPermissions));
+                    mPermissionListener.onDenied(deniedPermissions, PermissionUtils.getDisablePermissions(getActivity(), deniedPermissions));
                 }
             }
         }
