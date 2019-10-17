@@ -42,13 +42,26 @@ public class PermissionUtils {
     }
 
     /**
-     * 该版本是否需要申请权限
+     * 获取"被禁用的权限"
      *
-     * @return 该版本是否需要申请权限
+     * @param activity    Activity
+     * @param permissions 权限列表
+     * @return 被禁用的权限列表
      */
-    public static boolean isPermissionVersion() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    public static @NonNull
+    List<String> getDisablePermissions(Activity activity, List<String> permissions) {
+        List<String> disablePermissions = new ArrayList<>();
+        if (activity != null && isPermissionVersion()) {
+            List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
+            for (String deniedPermission : deniedPermissions) {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
+                    disablePermissions.add(deniedPermission);
+                }
+            }
+        }
+        return disablePermissions;
     }
+
 
     /**
      * 获取"被拒绝的权限"
@@ -71,22 +84,11 @@ public class PermissionUtils {
     }
 
     /**
-     * 获取"被禁用的权限"
+     * 该版本是否需要申请权限
      *
-     * @param activity    Activity
-     * @param permissions 权限列表
-     * @return 被禁用的权限列表
+     * @return 该版本是否需要申请权限
      */
-    public static @NonNull
-    List<String> getDisablePermissions(Activity activity, List<String> permissions) {
-        List<String> disablePermissions = new ArrayList<>();
-        if (activity != null && permissions != null && isPermissionVersion()) {
-            for (String deniedPermission : permissions) {
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
-                    disablePermissions.add(deniedPermission);
-                }
-            }
-        }
-        return disablePermissions;
+    public static boolean isPermissionVersion() {
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 }
