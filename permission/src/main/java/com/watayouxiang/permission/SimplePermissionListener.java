@@ -1,5 +1,7 @@
 package com.watayouxiang.permission;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class SimplePermissionListener implements PermissionListener {
@@ -9,7 +11,7 @@ public class SimplePermissionListener implements PermissionListener {
     }
 
     @Override
-    public void onDenied(List<String> deniedPermissions) {
+    public void onDenied(@NonNull List<String> deniedPermissions) {
 
     }
 }
