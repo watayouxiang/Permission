@@ -43,6 +43,25 @@ abstract class PermissionHelper<T> {
     }
 
     /**
+     * 获取"被拒绝的权限"
+     *
+     * @param permissions 权限列表
+     * @return 被拒绝的权限列表
+     */
+    private @NonNull
+    List<String> getDeniedPermissions(List<String> permissions) {
+        List<String> deniedPermissions = new ArrayList<>();
+        if (permissions != null && isPermissionVersion()) {
+            for (String permission : permissions) {
+                if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permission);
+                }
+            }
+        }
+        return deniedPermissions;
+    }
+
+    /**
      * 获取"被禁用的权限"
      *
      * @param permissions 权限列表
@@ -59,25 +78,6 @@ abstract class PermissionHelper<T> {
             }
         }
         return disablePermissions;
-    }
-
-    /**
-     * 获取"被拒绝的权限"
-     *
-     * @param permissions 权限列表
-     * @return 被拒绝的权限列表
-     */
-    private @NonNull
-    List<String> getDeniedPermissions(String[] permissions) {
-        List<String> deniedPermissions = new ArrayList<>();
-        if (permissions != null && isPermissionVersion()) {
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions.add(permission);
-                }
-            }
-        }
-        return deniedPermissions;
     }
 
     /**
@@ -154,7 +154,7 @@ abstract class PermissionHelper<T> {
      * @param listener    监听器
      */
     public void requestPermissions(String[] permissions, PermissionListener listener) {
-        List<String> deniedPermissions = getDeniedPermissions(permissions);
+        List<String> deniedPermissions = getDeniedPermissions(array2List(permissions));
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
                 listener.onGranted();
@@ -207,9 +207,13 @@ abstract class PermissionHelper<T> {
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
             List<String> deniedPermissions = getDeniedPermissions(mDeniedPermissions);
             if (deniedPermissions.isEmpty()) {
-                mPermissionListener.onGranted();
+                if (mPermissionListener != null) {
+                    mPermissionListener.onGranted();
+                }
             } else {
-                mPermissionListener.onDenied(deniedPermissions);
+                if (mPermissionListener != null) {
+                    mPermissionListener.onDenied(deniedPermissions);
+                }
             }
         }
     }
