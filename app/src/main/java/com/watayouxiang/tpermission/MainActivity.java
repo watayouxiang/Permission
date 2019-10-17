@@ -1,10 +1,12 @@
 package com.watayouxiang.tpermission;
 
 import android.Manifest;
+import android.content.Intent;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.watayouxiang.demoshell.ListActivity;
 import com.watayouxiang.demoshell.ListData;
@@ -46,18 +48,24 @@ public class MainActivity extends ListActivity {
                     }
 
                     @Override
-                    public void onDenied(@NonNull List<String> deniedPermissions) {
-                        Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-
-                        List<String> disablePermissions = mPermissionHelper.getDisablePermissions(deniedPermissions);
+                    public void onDenied(@NonNull List<String> deniedPermissions, @NonNull List<String> disablePermissions) {
                         if (!disablePermissions.isEmpty()) {
                             new AppSettingsDialog.Builder(MainActivity.this)
-                                    .setRequestCode(AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE)
                                     .build()
                                     .show();
+                        } else {
+                            Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+
+        }
     }
 
     @Override

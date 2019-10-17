@@ -43,6 +43,25 @@ abstract class PermissionHelper<T> {
     }
 
     /**
+     * 获取"被禁用的权限"
+     *
+     * @param permissions 权限列表
+     * @return 被禁用的权限列表
+     */
+    private @NonNull
+    List<String> getDisablePermissions(@Nullable List<String> permissions) {
+        List<String> disablePermissions = new ArrayList<>();
+        if (permissions != null && isPermissionVersion()) {
+            for (String deniedPermission : permissions) {
+                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
+                    disablePermissions.add(deniedPermission);
+                }
+            }
+        }
+        return disablePermissions;
+    }
+
+    /**
      * 获取"被拒绝的权限"
      *
      * @param permissions 权限列表
@@ -135,25 +154,6 @@ abstract class PermissionHelper<T> {
         }
     }
 
-    /**
-     * 获取"被禁用的权限"
-     *
-     * @param permissions 权限列表
-     * @return 被禁用的权限列表
-     */
-    public @NonNull
-    List<String> getDisablePermissions(@Nullable List<String> permissions) {
-        List<String> disablePermissions = new ArrayList<>();
-        if (permissions != null && isPermissionVersion()) {
-            for (String deniedPermission : permissions) {
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
-                    disablePermissions.add(deniedPermission);
-                }
-            }
-        }
-        return disablePermissions;
-    }
-
     // ============================================================================
     // Activity/Fragment Callback
     // ============================================================================
@@ -174,7 +174,7 @@ abstract class PermissionHelper<T> {
                 }
             } else {
                 if (mPermissionListener != null) {
-                    mPermissionListener.onDenied(deniedPermissions);
+                    mPermissionListener.onDenied(deniedPermissions, getDisablePermissions(deniedPermissions));
                 }
             }
         }

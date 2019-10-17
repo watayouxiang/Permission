@@ -13,7 +13,10 @@ public interface PermissionListener {
     /**
      * 被拒绝权限
      *
-     * @param deniedPermissions 被拒绝权限集合
+     * @param deniedPermissions  被拒绝权限集合（包含"被禁用权限集合"）.
+     *                           deniedPermissions!=null && deniedPermissions.size()>0
+     * @param disablePermissions 被禁用权限集合.
+     *                           disablePermissions!=null && disablePermissions.size()>=0
      */
-    void onDenied(@NonNull List<String> deniedPermissions);
+    void onDenied(@NonNull List<String> deniedPermissions, @NonNull List<String> disablePermissions);
 }
