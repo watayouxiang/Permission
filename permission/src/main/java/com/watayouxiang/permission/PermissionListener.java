@@ -13,8 +13,8 @@ public interface PermissionListener {
     /**
      * 被拒绝权限
      *
-     * @param deniedPermissions 被拒绝权限集合.
-     *                          deniedPermissions!=null && deniedPermissions.size()>0
+     * @param deniedPermissions 被拒绝权限集合。
+     *                          deniedPermissions不为空，并且deniedPermissions长度大于0。
      */
     void onDenied(@NonNull List<String> deniedPermissions);
 }
