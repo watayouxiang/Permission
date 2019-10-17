@@ -15,6 +15,7 @@ import com.watayouxiang.permission.PermissionListener;
 import com.watayouxiang.permission.dialog.AppSettingsDialog;
 import com.watayouxiang.permission.utils.PermissionUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
@@ -31,10 +32,25 @@ public class MainActivity extends ListActivity {
     @Override
     protected ListData getListData() {
         return new ListData()
-                .addClick("申请非常多的权限", new View.OnClickListener() {
+                .addSection(Arrays.toString(mPermission))
+                .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mHelper.requestPermissions(mPermission, new PermissionListener() {
+                        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(MainActivity.this, mPermission);
+                        Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addClick("获取【被禁用的权限】", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        List<String> disablePermissions = PermissionUtils.getDisablePermissions(MainActivity.this, mPermission);
+                        Toast.makeText(MainActivity.this, disablePermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addClick("申请权限", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mHelper.requestPermissions(new PermissionListener() {
                             @Override
                             public void onGranted() {
                                 Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
@@ -44,18 +60,15 @@ public class MainActivity extends ListActivity {
                             public void onDenied(@NonNull List<String> deniedPermissions) {
                                 Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                             }
-                        });
+                        }, mPermission);
                     }
                 })
                 .addClick("打开设置弹窗", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> disablePermissions = PermissionUtils.getDisablePermissions(MainActivity.this, mPermission);
-                        if (!disablePermissions.isEmpty()) {
-                            new AppSettingsDialog.Builder(MainActivity.this)
-                                    .build()
-                                    .show();
-                        }
+                        new AppSettingsDialog.Builder(MainActivity.this)
+                                .build()
+                                .show();
                     }
                 });
     }
@@ -64,8 +77,7 @@ public class MainActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(MainActivity.this, mPermission);
-            Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "onActivityResult", Toast.LENGTH_SHORT).show();
         }
     }
 

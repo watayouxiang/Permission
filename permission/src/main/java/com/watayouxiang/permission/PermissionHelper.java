@@ -92,18 +92,18 @@ public class PermissionHelper {
     // public methods
     // ============================================================================
 
-    public void requestPermissions(@Nullable String[] permissions, @Nullable PermissionListener listener) {
-        requestPermissions(permissions, DEFAULT_PERMISSION_REQ_CODE, listener);
+    public void requestPermissions(@Nullable PermissionListener listener, @Nullable String... permissions) {
+        requestPermissions(listener, DEFAULT_PERMISSION_REQ_CODE, permissions);
     }
 
     /**
      * 请求权限
      *
-     * @param permissions 权限数组
-     * @param requestCode 请求码
      * @param listener    监听器
+     * @param requestCode 请求码
+     * @param permissions 权限数组
      */
-    public void requestPermissions(@Nullable String[] permissions, int requestCode, @Nullable PermissionListener listener) {
+    public void requestPermissions(@Nullable PermissionListener listener, int requestCode, @Nullable String... permissions) {
         List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getActivity(), permissions);
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {

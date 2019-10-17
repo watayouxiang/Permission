@@ -79,7 +79,7 @@ public class AppSettingsDialog implements Parcelable {
     }
 
     /**
-     * 结果将回调至：void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
+     * 必然回调到：void onActivityResult(int requestCode, int resultCode, @Nullable Intent data)
      * 默认请求码requestCode：{@link #DEFAULT_SETTINGS_REQ_CODE}
      */
     public void show() {
