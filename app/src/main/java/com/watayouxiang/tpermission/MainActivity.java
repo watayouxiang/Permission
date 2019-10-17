@@ -35,33 +35,30 @@ public class MainActivity extends ListActivity {
                 .addClick("申请非常多的权限", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        requestPermissions();
+                        mHelper.requestPermissions(mPermission, new PermissionListener() {
+                            @Override
+                            public void onGranted() {
+                                Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onDenied(@NonNull List<String> deniedPermissions) {
+                                Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 })
                 .addClick("打开设置弹窗", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!PermissionUtils.getDisablePermissions(MainActivity.this, mPermission).isEmpty()) {
+                        List<String> disablePermissions = PermissionUtils.getDisablePermissions(MainActivity.this, mPermission);
+                        if (!disablePermissions.isEmpty()) {
                             new AppSettingsDialog.Builder(MainActivity.this)
                                     .build()
                                     .show();
                         }
                     }
                 });
-    }
-
-    private void requestPermissions() {
-        mHelper.requestPermissions(mPermission, new PermissionListener() {
-            @Override
-            public void onGranted() {
-                Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onDenied(@NonNull List<String> deniedPermissions) {
-                Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -76,7 +73,9 @@ public class MainActivity extends ListActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (mHelper != null) {
+            mHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
     @Override
