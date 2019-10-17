@@ -5,6 +5,8 @@ import android.content.Context;
 
 import androidx.fragment.app.Fragment;
 
+import com.watayouxiang.permission.utils.PermissionUtils;
+
 import java.util.List;
 
 public class FragmentPermissionHelper extends PermissionHelper<Fragment> {
@@ -24,7 +26,7 @@ public class FragmentPermissionHelper extends PermissionHelper<Fragment> {
 
     @Override
     protected void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
-        if (isPermissionVersion()) {
+        if (PermissionUtils.isPermissionVersion()) {
             getHost().requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
         }
     }

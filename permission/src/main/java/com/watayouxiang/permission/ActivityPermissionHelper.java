@@ -5,6 +5,8 @@ import android.content.Context;
 
 import androidx.core.app.ActivityCompat;
 
+import com.watayouxiang.permission.utils.PermissionUtils;
+
 import java.util.List;
 
 public class ActivityPermissionHelper extends PermissionHelper<Activity> {
@@ -24,7 +26,7 @@ public class ActivityPermissionHelper extends PermissionHelper<Activity> {
 
     @Override
     protected void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
-        if (isPermissionVersion()) {
+        if (PermissionUtils.isPermissionVersion()) {
             ActivityCompat.requestPermissions(getActivity(), deniedPermissions.toArray(new String[0]), requestCode);
         }
     }

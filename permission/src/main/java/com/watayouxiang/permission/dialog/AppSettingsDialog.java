@@ -1,4 +1,4 @@
-package com.watayouxiang.permission;
+package com.watayouxiang.permission.dialog;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,8 @@ import androidx.annotation.StringRes;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+
+import com.watayouxiang.permission.R;
 
 public class AppSettingsDialog implements Parcelable {
     public static final int DEFAULT_SETTINGS_REQ_CODE = 16061;

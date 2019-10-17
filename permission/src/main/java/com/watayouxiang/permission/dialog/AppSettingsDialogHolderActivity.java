@@ -1,4 +1,4 @@
-package com.watayouxiang.permission;
+package com.watayouxiang.permission.dialog;
 
 import android.app.Activity;
 import android.app.Dialog;

@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".AppSettingsDialogHolderActivity"
+            android:name=".dialog.AppSettingsDialogHolderActivity"
             android:exported="false"
             android:label=""
             android:theme="@style/PermissionsHelper.Transparent" />

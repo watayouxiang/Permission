@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.watayouxiang.permission.utils.PermissionUtils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -51,7 +53,7 @@ abstract class PermissionHelper<T> {
     private @NonNull
     List<String> getDisablePermissions(@Nullable List<String> permissions) {
         List<String> disablePermissions = new ArrayList<>();
-        if (permissions != null && isPermissionVersion()) {
+        if (permissions != null && PermissionUtils.isPermissionVersion()) {
             for (String deniedPermission : permissions) {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), deniedPermission)) {
                     disablePermissions.add(deniedPermission);
@@ -70,7 +72,7 @@ abstract class PermissionHelper<T> {
     private @NonNull
     List<String> getDeniedPermissions(List<String> permissions) {
         List<String> deniedPermissions = new ArrayList<>();
-        if (permissions != null && isPermissionVersion()) {
+        if (permissions != null && PermissionUtils.isPermissionVersion()) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(getContext(), permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permission);
@@ -92,7 +94,7 @@ abstract class PermissionHelper<T> {
         List<String> deniedPermissions = new ArrayList<>();
         if (permissions != null && grantResults != null
                 && permissions.length == grantResults.length
-                && isPermissionVersion()) {
+                && PermissionUtils.isPermissionVersion()) {
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permissions[i]);
@@ -100,15 +102,6 @@ abstract class PermissionHelper<T> {
             }
         }
         return deniedPermissions;
-    }
-
-    /**
-     * 该版本是否需要申请权限
-     *
-     * @return 该版本是否需要申请权限
-     */
-    boolean isPermissionVersion() {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
     // ============================================================================

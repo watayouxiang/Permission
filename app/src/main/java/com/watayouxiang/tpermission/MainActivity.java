@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.watayouxiang.demoshell.ListActivity;
 import com.watayouxiang.demoshell.ListData;
 import com.watayouxiang.permission.ActivityPermissionHelper;
-import com.watayouxiang.permission.AppSettingsDialog;
+import com.watayouxiang.permission.dialog.AppSettingsDialog;
 import com.watayouxiang.permission.PermissionListener;
 
 import java.util.List;
