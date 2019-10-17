@@ -10,9 +10,9 @@ import androidx.annotation.Nullable;
 
 import com.watayouxiang.demoshell.ListActivity;
 import com.watayouxiang.demoshell.ListData;
-import com.watayouxiang.permission.ActivityPermissionHelper;
-import com.watayouxiang.permission.dialog.AppSettingsDialog;
+import com.watayouxiang.permission.PermissionHelper;
 import com.watayouxiang.permission.PermissionListener;
+import com.watayouxiang.permission.dialog.AppSettingsDialog;
 
 import java.util.List;
 
@@ -29,10 +29,10 @@ public class MainActivity extends ListActivity {
                 });
     }
 
-    private ActivityPermissionHelper mPermissionHelper = new ActivityPermissionHelper(this);
+    private PermissionHelper mHelper = new PermissionHelper(this);
 
     private void requestPermissions() {
-        mPermissionHelper.requestPermissions(
+        mHelper.requestPermissions(
                 new String[]{
                         Manifest.permission.READ_PHONE_STATE,
                         Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -71,12 +71,12 @@ public class MainActivity extends ListActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermissionHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        mHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPermissionHelper = null;
+        mHelper = null;
     }
 }
