@@ -7,8 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.watayouxiang.permission.utils.PermissionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,11 +17,11 @@ public class PermissionHelper {
     private int mRequestCode;
     private PermissionListener mPermissionListener;
 
-    public PermissionHelper(Activity activity) {
+    public PermissionHelper(@NonNull Activity activity) {
         mActivityOrFragment = activity;
     }
 
-    public PermissionHelper(Fragment fragment) {
+    public PermissionHelper(@NonNull Fragment fragment) {
         mActivityOrFragment = fragment;
     }
 

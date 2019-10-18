@@ -1,4 +1,4 @@
-package com.watayouxiang.permission.utils;
+package com.watayouxiang.permission;
 
 import android.app.Activity;
 import android.content.Context;

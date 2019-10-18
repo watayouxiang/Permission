@@ -13,7 +13,7 @@ import com.watayouxiang.demoshell.ListData;
 import com.watayouxiang.permission.PermissionHelper;
 import com.watayouxiang.permission.PermissionListener;
 import com.watayouxiang.permission.dialog.AppSettingsDialog;
-import com.watayouxiang.permission.utils.PermissionUtils;
+import com.watayouxiang.permission.PermissionUtils;
 
 import java.util.Arrays;
 import java.util.List;
