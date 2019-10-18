@@ -14,47 +14,39 @@ import java.util.Collections;
 import java.util.List;
 
 public class PermissionUtils {
+
     // ============================================================================
-    // 拓展方法
+    // public
     // ============================================================================
 
     /**
-     * 数组转列表
+     * 申请权限
      *
-     * @param array 数组
-     * @param <DT>  数据类型
-     * @return 列表
+     * @param activity    Activity
+     * @param requestCode 请求码
+     * @param permissions 权限集合
+     * @return 是否调用了 {@link androidx.core.app.ActivityCompat#requestPermissions(Activity, String[], int)}
      */
-    @SafeVarargs
-    private static <DT> List<DT> array2List(DT... array) {
-        if (array != null) {
-            List<DT> list = new ArrayList<>();
-            Collections.addAll(list, array);
-            return list;
+    public static boolean requestPermissions(Activity activity, int requestCode, String... permissions) {
+        List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
+        if (activity != null && !deniedPermissions.isEmpty()) {
+            ActivityCompat.requestPermissions(activity, deniedPermissions.toArray(new String[0]), requestCode);
+            return true;
         }
-        return null;
-    }
-
-    public static @NonNull
-    List<String> getDeniedPermissions(Context context, String... permissions) {
-        return getDeniedPermissions(context, array2List(permissions));
+        return false;
     }
 
     public static @NonNull
     List<String> getDisablePermissions(Activity activity, String... permissions) {
-        return getDisablePermissions(activity, array2List(permissions));
+        return getDisablePermissions(activity, arr2List(permissions));
     }
-
-    // ============================================================================
-    // 基本方法
-    // ============================================================================
 
     /**
      * 获取"被禁用的权限"
      *
      * @param activity    Activity
      * @param permissions 权限列表
-     * @return 被禁用的权限列表
+     * @return "被禁用的权限"列表
      */
     public static @NonNull
     List<String> getDisablePermissions(Activity activity, List<String> permissions) {
@@ -70,13 +62,17 @@ public class PermissionUtils {
         return disablePermissions;
     }
 
+    public static @NonNull
+    List<String> getDeniedPermissions(Context context, String... permissions) {
+        return getDeniedPermissions(context, arr2List(permissions));
+    }
 
     /**
      * 获取"被拒绝的权限"
      *
      * @param context     上下文
      * @param permissions 权限列表
-     * @return 被拒绝的权限列表
+     * @return "被拒绝的权限"列表
      */
     public static @NonNull
     List<String> getDeniedPermissions(Context context, List<String> permissions) {
@@ -92,11 +88,25 @@ public class PermissionUtils {
     }
 
     /**
-     * 该版本是否需要申请权限
+     * 是否权限版本
      *
-     * @return 该版本是否需要申请权限
+     * @return 是否权限版本
      */
     public static boolean isPermissionVersion() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+    // ============================================================================
+    // private
+    // ============================================================================
+
+    @SafeVarargs
+    private static <DT> List<DT> arr2List(DT... array) {
+        if (array != null) {
+            List<DT> list = new ArrayList<>();
+            Collections.addAll(list, array);
+            return list;
+        }
+        return null;
     }
 }
