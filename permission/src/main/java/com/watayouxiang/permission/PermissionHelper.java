@@ -5,7 +5,6 @@ import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import com.watayouxiang.permission.utils.PermissionUtils;
@@ -75,14 +74,10 @@ public class PermissionHelper {
     private void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
         if (mActivityOrFragment instanceof Activity) {
             Activity activity = (Activity) mActivityOrFragment;
-            if (PermissionUtils.isPermissionVersion()) {
-                ActivityCompat.requestPermissions(activity, deniedPermissions.toArray(new String[0]), requestCode);
-            }
+            PermissionUtils.requestPermissions(activity, requestCode, deniedPermissions.toArray(new String[0]));
         } else if (mActivityOrFragment instanceof Fragment) {
             Fragment fragment = (Fragment) mActivityOrFragment;
-            if (PermissionUtils.isPermissionVersion()) {
-                fragment.requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
-            }
+            PermissionUtils.requestPermissions(fragment, requestCode, deniedPermissions.toArray(new String[0]));
         } else {
             throw new IllegalStateException("Unknown object: " + mActivityOrFragment);
         }
