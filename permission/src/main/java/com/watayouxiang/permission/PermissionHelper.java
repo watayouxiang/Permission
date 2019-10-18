@@ -5,25 +5,28 @@ import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PermissionHelper {
+abstract class PermissionHelper<T> {
     public static final int DEFAULT_PERMISSION_REQ_CODE = 13031;
 
-    private Object mActivityOrFragment;
     private int mRequestCode;
-    private PermissionListener mPermissionListener;
+    private TaoPermissionListener mPermissionListener;
+    private T mHost;
 
-    public PermissionHelper(@NonNull Activity activity) {
-        mActivityOrFragment = activity;
+    PermissionHelper(T host) {
+        this.mHost = host;
     }
 
-    public PermissionHelper(@NonNull Fragment fragment) {
-        mActivityOrFragment = fragment;
+    public T getHost() {
+        return mHost;
     }
+
+    abstract Activity getActivity();
+
+    abstract void startRequestPermissions(List<String> deniedPermissions, int requestCode);
 
     // ============================================================================
     // private methods
@@ -41,7 +44,7 @@ public class PermissionHelper {
         List<String> deniedPermissions = new ArrayList<>();
         if (permissions != null && grantResults != null
                 && permissions.length == grantResults.length
-                && TaoPermission.isPermissionVersion()) {
+                && TaoPermissionUtils.isPermissionVersion()) {
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permissions[i]);
@@ -51,41 +54,11 @@ public class PermissionHelper {
         return deniedPermissions;
     }
 
-    private Activity getActivity() {
-        if (mActivityOrFragment instanceof Activity) {
-            return (Activity) mActivityOrFragment;
-        } else if (mActivityOrFragment instanceof Fragment) {
-            return ((Fragment) mActivityOrFragment).getActivity();
-        } else {
-            throw new IllegalStateException("Unknown object: " + mActivityOrFragment);
-        }
-    }
-
-    /**
-     * 申请"被拒绝的权限"
-     * <p>
-     * 结果将回调至：{@link #onRequestPermissionsResult(int, String[], int[])}
-     *
-     * @param deniedPermissions 被拒绝的权限列表
-     * @param requestCode       请求码
-     */
-    private void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
-        if (mActivityOrFragment instanceof Activity) {
-            Activity activity = (Activity) mActivityOrFragment;
-            TaoPermission.requestPermissions(activity, requestCode, deniedPermissions.toArray(new String[0]));
-        } else if (mActivityOrFragment instanceof Fragment) {
-            Fragment fragment = (Fragment) mActivityOrFragment;
-            TaoPermission.requestPermissions(fragment, requestCode, deniedPermissions.toArray(new String[0]));
-        } else {
-            throw new IllegalStateException("Unknown object: " + mActivityOrFragment);
-        }
-    }
-
     // ============================================================================
     // public methods
     // ============================================================================
 
-    public void requestPermissions(@Nullable PermissionListener listener, @Nullable String... permissions) {
+    public void requestPermissions(@Nullable TaoPermissionListener listener, @Nullable String... permissions) {
         requestPermissions(listener, DEFAULT_PERMISSION_REQ_CODE, permissions);
     }
 
@@ -96,17 +69,17 @@ public class PermissionHelper {
      * @param requestCode 请求码
      * @param permissions 权限数组
      */
-    public void requestPermissions(@Nullable PermissionListener listener, int requestCode, @Nullable String... permissions) {
-        List<String> deniedPermissions = TaoPermission.getDeniedPermissions(getActivity(), permissions);
+    public void requestPermissions(@Nullable TaoPermissionListener listener, int requestCode, @Nullable String... permissions) {
+        List<String> deniedPermissions = TaoPermissionUtils.getDeniedPermissions(getActivity(), permissions);
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
                 listener.onGranted();
             }
-        } else {
-            mRequestCode = requestCode;
-            mPermissionListener = listener;
-            startRequestPermissions(deniedPermissions, requestCode);
+            return;
         }
+        mRequestCode = requestCode;
+        mPermissionListener = listener;
+        startRequestPermissions(deniedPermissions, requestCode);
     }
 
     /**

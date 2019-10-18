@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-public interface PermissionListener {
+public interface TaoPermissionListener {
     /**
      * 所有权限已同意
      */

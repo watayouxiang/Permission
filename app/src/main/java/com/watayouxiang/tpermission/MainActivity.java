@@ -11,9 +11,9 @@ import androidx.annotation.Nullable;
 import com.watayouxiang.demoshell.ListActivity;
 import com.watayouxiang.demoshell.ListData;
 import com.watayouxiang.permission.PermissionHelper;
-import com.watayouxiang.permission.PermissionListener;
+import com.watayouxiang.permission.TaoPermissionListener;
 import com.watayouxiang.permission.dialog.AppSettingsDialog;
-import com.watayouxiang.permission.TaoPermission;
+import com.watayouxiang.permission.TaoPermissionUtils;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,21 +36,21 @@ public class MainActivity extends ListActivity {
                 .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> deniedPermissions = TaoPermission.getDeniedPermissions(MainActivity.this, mPermission);
+                        List<String> deniedPermissions = TaoPermissionUtils.getDeniedPermissions(MainActivity.this, mPermission);
                         Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addClick("获取【被禁用的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> disablePermissions = TaoPermission.getDisablePermissions(MainActivity.this, mPermission);
+                        List<String> disablePermissions = TaoPermissionUtils.getDisablePermissions(MainActivity.this, mPermission);
                         Toast.makeText(MainActivity.this, disablePermissions.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addClick("申请权限", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mHelper.requestPermissions(new PermissionListener() {
+                        mHelper.requestPermissions(new TaoPermissionListener() {
                             @Override
                             public void onGranted() {
                                 Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();

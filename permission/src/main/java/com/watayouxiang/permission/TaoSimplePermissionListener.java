@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import java.util.List;
 
-public class SimplePermissionListener implements PermissionListener {
+public class TaoSimplePermissionListener implements TaoPermissionListener {
     @Override
     public void onGranted() {
 
