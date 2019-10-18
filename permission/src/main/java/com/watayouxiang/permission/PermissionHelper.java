@@ -20,13 +20,13 @@ abstract class PermissionHelper<T> {
         this.mHost = host;
     }
 
-    public T getHost() {
+    T getHost() {
         return mHost;
     }
 
     abstract Activity getActivity();
 
-    abstract void startRequestPermissions(List<String> deniedPermissions, int requestCode);
+    abstract void startRequestPermissions(@NonNull List<String> deniedPermissions, int requestCode);
 
     // ============================================================================
     // private methods

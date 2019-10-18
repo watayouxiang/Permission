@@ -2,6 +2,8 @@ package com.watayouxiang.permission;
 
 import android.app.Activity;
 
+import androidx.annotation.NonNull;
+
 import java.util.List;
 
 public class TaoActivityPermissionHelper extends PermissionHelper<Activity> {
@@ -15,7 +17,8 @@ public class TaoActivityPermissionHelper extends PermissionHelper<Activity> {
     }
 
     @Override
-    void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
+    void startRequestPermissions(@NonNull List<String> deniedPermissions, int requestCode) {
 
     }
+
 }
