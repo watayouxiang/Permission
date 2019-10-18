@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -27,18 +28,13 @@ public class PermissionUtils {
      * @param permissions 权限集合
      * @return 是否调用了 {@link androidx.core.app.ActivityCompat#requestPermissions(Activity, String[], int)}
      */
-    public static boolean requestPermissions(Activity activity, int requestCode, String... permissions) {
+    public static boolean requestPermissions(@NonNull Activity activity, int requestCode, @Nullable String... permissions) {
         List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
-        if (activity != null && !deniedPermissions.isEmpty()) {
+        if (!deniedPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(activity, deniedPermissions.toArray(new String[0]), requestCode);
             return true;
         }
         return false;
-    }
-
-    public static @NonNull
-    List<String> getDisablePermissions(Activity activity, String... permissions) {
-        return getDisablePermissions(activity, arr2List(permissions));
     }
 
     /**
@@ -49,9 +45,9 @@ public class PermissionUtils {
      * @return "被禁用的权限"列表
      */
     public static @NonNull
-    List<String> getDisablePermissions(Activity activity, List<String> permissions) {
+    List<String> getDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
         List<String> disablePermissions = new ArrayList<>();
-        if (activity != null && isPermissionVersion()) {
+        if (isPermissionVersion()) {
             List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
             for (String deniedPermission : deniedPermissions) {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
@@ -63,8 +59,8 @@ public class PermissionUtils {
     }
 
     public static @NonNull
-    List<String> getDeniedPermissions(Context context, String... permissions) {
-        return getDeniedPermissions(context, arr2List(permissions));
+    List<String> getDisablePermissions(@NonNull Activity activity, @Nullable String... permissions) {
+        return getDisablePermissions(activity, arr2List(permissions));
     }
 
     /**
@@ -75,9 +71,9 @@ public class PermissionUtils {
      * @return "被拒绝的权限"列表
      */
     public static @NonNull
-    List<String> getDeniedPermissions(Context context, List<String> permissions) {
+    List<String> getDeniedPermissions(@NonNull Context context, @Nullable List<String> permissions) {
         List<String> deniedPermissions = new ArrayList<>();
-        if (context != null && permissions != null && isPermissionVersion()) {
+        if (permissions != null && isPermissionVersion()) {
             for (String permission : permissions) {
                 if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permission);
@@ -85,6 +81,11 @@ public class PermissionUtils {
             }
         }
         return deniedPermissions;
+    }
+
+    public static @NonNull
+    List<String> getDeniedPermissions(@NonNull Context context, @Nullable String... permissions) {
+        return getDeniedPermissions(context, arr2List(permissions));
     }
 
     /**
