@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +20,27 @@ public class PermissionUtils {
     // ============================================================================
     // public
     // ============================================================================
+
+    /**
+     * 申请权限
+     *
+     * @param fragment    Fragment
+     * @param requestCode 请求码
+     * @param permissions 权限集合
+     * @return 是否调用了 {@link androidx.fragment.app.Fragment#requestPermissions(String[], int)}
+     */
+    public static boolean requestPermissions(@NonNull Fragment fragment, int requestCode, @Nullable String... permissions) {
+        Context context = fragment.getContext();
+        if (context == null) {
+            throw new IllegalStateException("Fragment " + fragment + " not attached to Activity");
+        }
+        List<String> deniedPermissions = getDeniedPermissions(context, permissions);
+        if (PermissionUtils.isPermissionVersion()) {
+            fragment.requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 申请权限
