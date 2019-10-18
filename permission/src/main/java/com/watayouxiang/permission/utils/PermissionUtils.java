@@ -27,7 +27,8 @@ public class PermissionUtils {
      * @param fragment    Fragment
      * @param requestCode 请求码
      * @param permissions 权限集合
-     * @return 是否调用了 {@link androidx.fragment.app.Fragment#requestPermissions(String[], int)}
+     * @return 是否调用了：{@link androidx.fragment.app.Fragment#requestPermissions(String[], int)}
+     *          成功调用，结果会回调到：{@link androidx.fragment.app.Fragment#onRequestPermissionsResult(int, String[], int[])}
      */
     public static boolean requestPermissions(@NonNull Fragment fragment, int requestCode, @Nullable String... permissions) {
         Context context = fragment.getContext();
@@ -48,7 +49,8 @@ public class PermissionUtils {
      * @param activity    Activity
      * @param requestCode 请求码
      * @param permissions 权限集合
-     * @return 是否调用了 {@link androidx.core.app.ActivityCompat#requestPermissions(Activity, String[], int)}
+     * @return 是否调用了：{@link androidx.core.app.ActivityCompat#requestPermissions(Activity, String[], int)}
+     *          成功调用，结果会回调到：{@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])}
      */
     public static boolean requestPermissions(@NonNull Activity activity, int requestCode, @Nullable String... permissions) {
         List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
