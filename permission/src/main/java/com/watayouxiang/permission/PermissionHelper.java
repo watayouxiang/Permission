@@ -41,7 +41,7 @@ public class PermissionHelper {
         List<String> deniedPermissions = new ArrayList<>();
         if (permissions != null && grantResults != null
                 && permissions.length == grantResults.length
-                && PermissionUtils.isPermissionVersion()) {
+                && TaoPermission.isPermissionVersion()) {
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                     deniedPermissions.add(permissions[i]);
@@ -72,10 +72,10 @@ public class PermissionHelper {
     private void startRequestPermissions(List<String> deniedPermissions, int requestCode) {
         if (mActivityOrFragment instanceof Activity) {
             Activity activity = (Activity) mActivityOrFragment;
-            PermissionUtils.requestPermissions(activity, requestCode, deniedPermissions.toArray(new String[0]));
+            TaoPermission.requestPermissions(activity, requestCode, deniedPermissions.toArray(new String[0]));
         } else if (mActivityOrFragment instanceof Fragment) {
             Fragment fragment = (Fragment) mActivityOrFragment;
-            PermissionUtils.requestPermissions(fragment, requestCode, deniedPermissions.toArray(new String[0]));
+            TaoPermission.requestPermissions(fragment, requestCode, deniedPermissions.toArray(new String[0]));
         } else {
             throw new IllegalStateException("Unknown object: " + mActivityOrFragment);
         }
@@ -97,7 +97,7 @@ public class PermissionHelper {
      * @param permissions 权限数组
      */
     public void requestPermissions(@Nullable PermissionListener listener, int requestCode, @Nullable String... permissions) {
-        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(getActivity(), permissions);
+        List<String> deniedPermissions = TaoPermission.getDeniedPermissions(getActivity(), permissions);
         if (deniedPermissions.isEmpty()) {
             if (listener != null) {
                 listener.onGranted();

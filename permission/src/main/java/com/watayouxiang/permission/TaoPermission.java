@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class PermissionUtils {
+public class TaoPermission {
 
     // ============================================================================
     // public
@@ -36,7 +36,7 @@ public class PermissionUtils {
             throw new IllegalStateException("Fragment " + fragment + " not attached to Activity");
         }
         List<String> deniedPermissions = getDeniedPermissions(context, permissions);
-        if (PermissionUtils.isPermissionVersion()) {
+        if (TaoPermission.isPermissionVersion()) {
             fragment.requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
             return true;
         }

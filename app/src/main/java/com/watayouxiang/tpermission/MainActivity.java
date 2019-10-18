@@ -13,7 +13,7 @@ import com.watayouxiang.demoshell.ListData;
 import com.watayouxiang.permission.PermissionHelper;
 import com.watayouxiang.permission.PermissionListener;
 import com.watayouxiang.permission.dialog.AppSettingsDialog;
-import com.watayouxiang.permission.PermissionUtils;
+import com.watayouxiang.permission.TaoPermission;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,14 +36,14 @@ public class MainActivity extends ListActivity {
                 .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> deniedPermissions = PermissionUtils.getDeniedPermissions(MainActivity.this, mPermission);
+                        List<String> deniedPermissions = TaoPermission.getDeniedPermissions(MainActivity.this, mPermission);
                         Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addClick("获取【被禁用的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> disablePermissions = PermissionUtils.getDisablePermissions(MainActivity.this, mPermission);
+                        List<String> disablePermissions = TaoPermission.getDisablePermissions(MainActivity.this, mPermission);
                         Toast.makeText(MainActivity.this, disablePermissions.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
