@@ -18,7 +18,7 @@ abstract class PermissionHelper<T> {
 
     private T mHost;
 
-    PermissionHelper(T host) {
+    public PermissionHelper(T host) {
         this.mHost = host;
     }
 

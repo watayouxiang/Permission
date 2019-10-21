@@ -8,7 +8,7 @@ import com.watayouxiang.permission.TaoPermissionUtils;
 import java.util.List;
 
 public class TaoFragmentPermissionHelper extends PermissionHelper<Fragment> {
-    TaoFragmentPermissionHelper(Fragment host) {
+    public TaoFragmentPermissionHelper(Fragment host) {
         super(host);
     }
 
