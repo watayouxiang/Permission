@@ -61,11 +61,11 @@ public class TaoPermissionUtils {
     }
 
     /**
-     * 获取"被禁用的权限"，如果没有则返回空列表。
+     * 筛选出"被禁用权限"列表
      *
      * @param activity    Activity
      * @param permissions 权限列表
-     * @return "被禁用的权限"列表，如果没有则返回空列表。
+     * @return "被禁用权限"列表，如果没有则返回空列表。
      */
     public static @NonNull
     List<String> getDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
@@ -82,11 +82,11 @@ public class TaoPermissionUtils {
     }
 
     /**
-     * 获取"被拒绝的权限"，如果没有则返回空列表。
+     * 筛选出"被拒绝权限"列表
      *
      * @param context     上下文
      * @param permissions 权限列表
-     * @return "被拒绝的权限"列表，如果没有则返回空列表。
+     * @return "被拒绝权限"列表，如果没有则返回空列表。
      */
     public static @NonNull
     List<String> getDeniedPermissions(@NonNull Context context, @Nullable List<String> permissions) {
