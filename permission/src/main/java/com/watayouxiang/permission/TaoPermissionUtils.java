@@ -101,6 +101,11 @@ public class TaoPermissionUtils {
 
     /**
      * 是否是"被禁用权限"
+     * <p>
+     * 申请某个权限时我们是否要给用户解释一下。
+     * {@link androidx.core.app.ActivityCompat#shouldShowRequestPermissionRationale(Activity, String)}
+     * 返回 false 有两种可能：一是我们第一次申请权限的时候，二是用户选择了 "不再提醒"。
+     * 返回 true 是：用户拒绝过我们的权限申请但是没有勾选 "不再提醒"。
      *
      * @param activity   Activity
      * @param permission 权限
