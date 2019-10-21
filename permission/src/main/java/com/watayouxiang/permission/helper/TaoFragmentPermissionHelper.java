@@ -1,5 +1,7 @@
 package com.watayouxiang.permission.helper;
 
+import android.app.Activity;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -16,5 +18,10 @@ public class TaoFragmentPermissionHelper extends PermissionHelper<Fragment> {
     @Override
     List<String> startRequestPermissions(int requestCode, List<String> permissions) {
         return TaoPermissionUtils.requestPermissions(getHost(), requestCode, permissions);
+    }
+
+    @Override
+    Activity getActivity() {
+        return getHost().getActivity();
     }
 }

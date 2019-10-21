@@ -1,5 +1,7 @@
 package com.watayouxiang.permission.helper;
 
+import android.app.Activity;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -62,10 +64,13 @@ abstract class PermissionHelper<T> {
                     mPermissionListener.onGranted();
                 }
             } else {
+                boolean haveBanPermission = TaoPermissionUtils.haveBanPermission(getActivity(), permissions);
                 if (mPermissionListener != null) {
                     mPermissionListener.onDenied(deniedPermissions);
                 }
             }
         }
     }
+
+    abstract Activity getActivity();
 }

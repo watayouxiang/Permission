@@ -18,4 +18,9 @@ public class TaoActivityPermissionHelper extends PermissionHelper<Activity> {
     List<String> startRequestPermissions(int requestCode, List<String> permissions) {
         return TaoPermissionUtils.requestPermissions(getHost(), requestCode, permissions);
     }
+
+    @Override
+    Activity getActivity() {
+        return getHost();
+    }
 }
