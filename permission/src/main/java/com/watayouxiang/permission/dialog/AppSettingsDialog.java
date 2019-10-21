@@ -94,9 +94,11 @@ public class AppSettingsDialog implements Parcelable {
         } else {
             builder = new AlertDialog.Builder(mContext);
         }
+        if (mTitle != null) {
+            builder.setTitle(mTitle);
+        }
         return builder
                 .setCancelable(false)
-                .setTitle(mTitle)
                 .setMessage(mRationale)
                 .setPositiveButton(mPositiveButtonText, positiveListener)
                 .setNegativeButton(mNegativeButtonText, negativeListener)
@@ -247,8 +249,6 @@ public class AppSettingsDialog implements Parcelable {
         public AppSettingsDialog build() {
             mRationale = TextUtils.isEmpty(mRationale) ?
                     mContext.getString(R.string.rationale_ask_again) : mRationale;
-            mTitle = TextUtils.isEmpty(mTitle) ?
-                    mContext.getString(R.string.title_settings_dialog) : mTitle;
             mPositiveButtonText = TextUtils.isEmpty(mPositiveButtonText) ?
                     mContext.getString(android.R.string.ok) : mPositiveButtonText;
             mNegativeButtonText = TextUtils.isEmpty(mNegativeButtonText) ?

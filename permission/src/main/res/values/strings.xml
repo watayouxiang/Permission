@@ -2,6 +2,4 @@
     <string name="rationale_ask_again">
         是否前往应用设置页开启权限？
     </string>
-
-    <string name="title_settings_dialog">开启权限</string>
 </resources>
