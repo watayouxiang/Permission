@@ -60,26 +60,6 @@ public class TaoPermissionUtils {
     }
 
     /**
-     * 筛选出"被禁用权限"列表
-     *
-     * @param activity    Activity
-     * @param permissions 权限列表
-     * @return "被禁用权限"列表，如果没有则返回空列表。
-     */
-    public static @NonNull
-    List<String> filterDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
-        List<String> disablePermissions = new ArrayList<>();
-        if (permissions != null) {
-            for (String permission : permissions) {
-                if (isDisablePermissions(activity, permission)) {
-                    disablePermissions.add(permission);
-                }
-            }
-        }
-        return disablePermissions;
-    }
-
-    /**
      * 筛选出"被拒绝权限"列表
      *
      * @param context     上下文
@@ -100,19 +80,15 @@ public class TaoPermissionUtils {
     }
 
     /**
-     * 是否是"被禁用权限"
-     * <p>
-     * 申请某个权限时我们是否要给用户解释一下。
-     * {@link androidx.core.app.ActivityCompat#shouldShowRequestPermissionRationale(Activity, String)}
-     * 返回 false 有两种可能：一是我们第一次申请权限的时候，二是用户选择了 "不再提醒"。
-     * 返回 true 是：用户拒绝过我们的权限申请但是没有勾选 "不再提醒"。
+     * 申请某个权限时我们是否要给用户解释一下
      *
      * @param activity   Activity
      * @param permission 权限
-     * @return 是否是"被禁用权限"
+     * @return 返回 false 有两种可能：一是我们第一次申请权限的时候，二是用户选择了 "不再提醒"。
+     * 返回 true 是：用户拒绝过我们的权限申请但是没有勾选 "不再提醒"。
      */
-    public static boolean isDisablePermissions(@NonNull Activity activity, @NonNull String permission) {
-        return isDeniedPermission(activity, permission) && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
+    public static boolean shouldShowRequestPermissionRationale(@NonNull Activity activity, @NonNull String permission) {
+        return ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
     }
 
     /**
