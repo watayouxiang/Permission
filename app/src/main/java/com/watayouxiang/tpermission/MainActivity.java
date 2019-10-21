@@ -46,18 +46,6 @@ public class MainActivity extends ListActivity {
                                 .show();
                     }
                 })
-                .addClick("获取【被禁用的权限】", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        List<String> disablePermissions = TaoPermissionUtils.filterDisablePermissions(MainActivity.this, mPermissions);
-                        new AlertDialog.Builder(v.getContext())
-                                .setTitle("被禁用的权限")
-                                .setMessage(disablePermissions.toString())
-                                .setPositiveButton("确定", null)
-                                .create()
-                                .show();
-                    }
-                })
                 .addClick("申请权限", new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
