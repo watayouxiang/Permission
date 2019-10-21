@@ -21,7 +21,7 @@ public interface TaoPermissionListener {
      * 权限被禁用
      *
      * @param disabledPermissions 被禁用的权限列表（不为空，长度大于0）
-     * @param deniedPermissions   被拒绝的权限列表（不为空，长度大于等于0）
+     * @param deniedPermissions   被拒绝的权限列表（不为空，长度大于或等于0）
      */
     void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions);
 }

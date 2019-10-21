@@ -52,13 +52,13 @@ public class MainActivity extends ListActivity {
                         mHelper.requestPermissions(mPermissions, new TaoPermissionListener() {
                             @Override
                             public void onGranted() {
-                                Toast.makeText(MainActivity.this, "权限申请成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "申请权限：成功", Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public void onDenied(@NonNull List<String> deniedPermissions) {
                                 new AlertDialog.Builder(v.getContext())
-                                        .setTitle("权限被拒绝")
+                                        .setTitle("申请权限：被拒绝")
                                         .setMessage(deniedPermissions.toString())
                                         .setPositiveButton("确定", null)
                                         .create()
@@ -68,8 +68,8 @@ public class MainActivity extends ListActivity {
                             @Override
                             public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
                                 new AlertDialog.Builder(v.getContext())
-                                        .setTitle("权限被禁用")
-                                        .setMessage("被禁用：" + disabledPermissions.toString() + "，被拒绝：" + deniedPermissions.toString())
+                                        .setTitle("申请权限：被禁用")
+                                        .setMessage("禁用权限：" + disabledPermissions.toString() + "，拒绝权限：" + deniedPermissions.toString())
                                         .setPositiveButton("确定", null)
                                         .create()
                                         .show();
