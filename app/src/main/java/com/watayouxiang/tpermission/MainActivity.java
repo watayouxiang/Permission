@@ -33,7 +33,9 @@ public class MainActivity extends ListActivity {
     @Override
     protected ListData getListData() {
         return new ListData()
+                .addSection("申请以下权限")
                 .addSection(mPermissions.toString())
+                .addSection("---------------")
                 .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
