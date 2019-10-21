@@ -1,6 +1,8 @@
 package com.watayouxiang.tpermission;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -21,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
+    private MainActivity activity = this;
     private List<String> mPermissions = Arrays.asList(
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -28,6 +31,7 @@ public class MainActivity extends ListActivity {
             Manifest.permission.CAMERA
     );
     private TaoActivityPermissionHelper mHelper = new TaoActivityPermissionHelper(this);
+    private int REQ_CODE_APP_SETTINGS = 1001;
 
     @Override
     protected void initView(Bundle savedInstanceState) {
@@ -35,21 +39,33 @@ public class MainActivity extends ListActivity {
         mHelper.setPermissionListener(new TaoPermissionListener() {
             @Override
             public void onGranted() {
-                Toast.makeText(MainActivity.this, "申请结果：成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "申请成功", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onDenied(@NonNull List<String> deniedPermissions) {
-                Toast.makeText(MainActivity.this, "申请结果：被拒绝", Toast.LENGTH_SHORT).show();
-                mHelper.requestPermissions(deniedPermissions);
+            public void onDenied(@NonNull final List<String> deniedPermissions) {
+                new AlertDialog.Builder(activity)
+                        .setTitle("申请被拒绝")
+                        .setMessage("请允许以下权限：" + deniedPermissions.toString())
+                        .setPositiveButton("去允许", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mHelper.requestPermissions(deniedPermissions);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .create()
+                        .show();
             }
 
             @Override
             public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
-                Toast.makeText(MainActivity.this, "申请结果：被禁用", Toast.LENGTH_SHORT).show();
                 new AppSettingsDialog.Builder(MainActivity.this)
-                        .setTitle("权限被禁用，需前往设置页开启")
-                        .setRationale("被禁用的权限：" + disabledPermissions.toString() + "，被拒绝的权限：" + deniedPermissions.toString())
+                        .setRequestCode(REQ_CODE_APP_SETTINGS)
+                        .setTitle("申请被禁用")
+                        .setRationale("前往设置页开启权限，被禁用权限有：" + disabledPermissions.toString() + "，被拒绝权限有：" + deniedPermissions.toString())
+                        .setPositiveButton("去允许")
+                        .setNegativeButton("取消")
                         .build()
                         .show();
             }
@@ -62,7 +78,7 @@ public class MainActivity extends ListActivity {
                 .addSection("申请以下权限")
                 .addSection(mPermissions.toString())
                 .addSection("---------------")
-                .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
+                .addClick("筛选出【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         List<String> deniedPermissions = TaoPermissionUtils.filterDeniedPermissions(MainActivity.this, mPermissions);
@@ -71,14 +87,6 @@ public class MainActivity extends ListActivity {
                                 .setMessage(deniedPermissions.toString())
                                 .setPositiveButton("确定", null)
                                 .create()
-                                .show();
-                    }
-                })
-                .addClick("打开【设置弹窗】", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        new AppSettingsDialog.Builder(MainActivity.this)
-                                .build()
                                 .show();
                     }
                 })
@@ -93,8 +101,10 @@ public class MainActivity extends ListActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            Toast.makeText(MainActivity.this, "【设置弹窗】的回调", Toast.LENGTH_SHORT).show();
+        if (requestCode == REQ_CODE_APP_SETTINGS) {
+            if (resultCode != Activity.RESULT_CANCELED){
+                mHelper.requestPermissions(mPermissions);
+            }
         }
     }
 
