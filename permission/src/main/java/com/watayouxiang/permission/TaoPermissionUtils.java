@@ -32,7 +32,7 @@ public class TaoPermissionUtils {
         if (context == null) {
             throw new IllegalStateException("Fragment " + fragment + " not attached to Activity");
         }
-        List<String> deniedPermissions = getDeniedPermissions(context, permissions);
+        List<String> deniedPermissions = filterDeniedPermissions(context, permissions);
         if (!deniedPermissions.isEmpty()) {
             fragment.requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
         }
@@ -52,7 +52,7 @@ public class TaoPermissionUtils {
      */
     public static @NonNull
     List<String> requestPermissions(@NonNull Activity activity, int requestCode, @Nullable List<String> permissions) {
-        List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
+        List<String> deniedPermissions = filterDeniedPermissions(activity, permissions);
         if (!deniedPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(activity, deniedPermissions.toArray(new String[0]), requestCode);
         }
@@ -67,10 +67,10 @@ public class TaoPermissionUtils {
      * @return "被禁用权限"列表，如果没有则返回空列表。
      */
     public static @NonNull
-    List<String> getDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
+    List<String> filterDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
         List<String> disablePermissions = new ArrayList<>();
         if (isPermissionVersion()) {
-            List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
+            List<String> deniedPermissions = filterDeniedPermissions(activity, permissions);
             for (String deniedPermission : deniedPermissions) {
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
                     disablePermissions.add(deniedPermission);
@@ -88,7 +88,7 @@ public class TaoPermissionUtils {
      * @return "被拒绝权限"列表，如果没有则返回空列表。
      */
     public static @NonNull
-    List<String> getDeniedPermissions(@NonNull Context context, @Nullable List<String> permissions) {
+    List<String> filterDeniedPermissions(@NonNull Context context, @Nullable List<String> permissions) {
         List<String> deniedPermissions = new ArrayList<>();
         if (permissions != null && isPermissionVersion()) {
             for (String permission : permissions) {

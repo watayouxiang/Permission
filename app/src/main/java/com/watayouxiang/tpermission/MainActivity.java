@@ -37,7 +37,7 @@ public class MainActivity extends ListActivity {
                 .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> deniedPermissions = TaoPermissionUtils.getDeniedPermissions(MainActivity.this, mPermissions);
+                        List<String> deniedPermissions = TaoPermissionUtils.filterDeniedPermissions(MainActivity.this, mPermissions);
                         new AlertDialog.Builder(v.getContext())
                                 .setTitle("被拒绝的权限")
                                 .setMessage(deniedPermissions.toString())
@@ -49,7 +49,7 @@ public class MainActivity extends ListActivity {
                 .addClick("获取【被禁用的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> disablePermissions = TaoPermissionUtils.getDisablePermissions(MainActivity.this, mPermissions);
+                        List<String> disablePermissions = TaoPermissionUtils.filterDisablePermissions(MainActivity.this, mPermissions);
                         new AlertDialog.Builder(v.getContext())
                                 .setTitle("被禁用的权限")
                                 .setMessage(disablePermissions.toString())
