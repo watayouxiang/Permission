@@ -6,6 +6,6 @@
             android:name=".dialog.AppSettingsDialogHolderActivity"
             android:exported="false"
             android:label=""
-            android:theme="@style/PermissionsHelper.Transparent" />
+            android:theme="@style/TaoPermissions.Transparent" />
     </application>
 </manifest>
