@@ -61,6 +61,30 @@ public class TaoPermissionUtils {
 
     /**
      * 筛选出"被拒绝权限"列表
+     * <p>
+     * 在 {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])} 方法中使用
+     *
+     * @param permissions  权限列表
+     * @param grantResults 授予结果
+     * @return "被拒绝权限"列表，如果没有则返回空列表。
+     */
+    public static @NonNull
+    List<String> filterDeniedPermissions(@Nullable String[] permissions, @Nullable int[] grantResults) {
+        List<String> deniedPermissions = new ArrayList<>();
+        if (permissions != null && grantResults != null
+                && permissions.length == grantResults.length
+                && TaoPermissionUtils.isPermissionVersion()) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permissions[i]);
+                }
+            }
+        }
+        return deniedPermissions;
+    }
+
+    /**
+     * 筛选出"被拒绝权限"列表
      *
      * @param context     上下文
      * @param permissions 权限列表

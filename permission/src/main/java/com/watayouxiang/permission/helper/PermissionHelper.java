@@ -1,13 +1,10 @@
 package com.watayouxiang.permission.helper;
 
-import android.content.pm.PackageManager;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.watayouxiang.permission.TaoPermissionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 abstract class PermissionHelper<T> {
@@ -59,7 +56,7 @@ abstract class PermissionHelper<T> {
      */
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == mRequestCode) {
-            List<String> deniedPermissions = getDeniedPermissions(permissions, grantResults);
+            List<String> deniedPermissions = TaoPermissionUtils.filterDeniedPermissions(permissions, grantResults);
             if (deniedPermissions.isEmpty()) {
                 if (mPermissionListener != null) {
                     mPermissionListener.onGranted();
@@ -70,20 +67,5 @@ abstract class PermissionHelper<T> {
                 }
             }
         }
-    }
-
-    private @NonNull
-    List<String> getDeniedPermissions(String[] permissions, int[] grantResults) {
-        List<String> deniedPermissions = new ArrayList<>();
-        if (permissions != null && grantResults != null
-                && permissions.length == grantResults.length
-                && TaoPermissionUtils.isPermissionVersion()) {
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions.add(permissions[i]);
-                }
-            }
-        }
-        return deniedPermissions;
     }
 }
