@@ -16,22 +16,19 @@ import java.util.Collections;
 import java.util.List;
 
 public class TaoPermissionUtils {
-
-    // ============================================================================
-    // public
-    // ============================================================================
-
     /**
      * 申请权限
+     * <p>
+     * 如果调用了 {@link androidx.fragment.app.Fragment#requestPermissions(String[], int)}
+     * 则结果会回调到 {@link androidx.fragment.app.Fragment#onRequestPermissionsResult(int, String[], int[])}
      *
      * @param fragment    Fragment
      * @param requestCode 请求码
      * @param permissions 权限集合
-     * @return 是否调用了 {@link androidx.fragment.app.Fragment#requestPermissions(String[], int)};
-     * true:    结果会回调到 {@link androidx.fragment.app.Fragment#onRequestPermissionsResult(int, String[], int[])}
-     * false:   这些权限没必要申请
+     * @return 申请的权限列表，如果没有则返回空列表
      */
-    public static boolean requestPermissions(@NonNull Fragment fragment, int requestCode, @Nullable String... permissions) {
+    public static @NonNull
+    List<String> requestPermissions(@NonNull Fragment fragment, int requestCode, @Nullable List<String> permissions) {
         Context context = fragment.getContext();
         if (context == null) {
             throw new IllegalStateException("Fragment " + fragment + " not attached to Activity");
@@ -39,36 +36,36 @@ public class TaoPermissionUtils {
         List<String> deniedPermissions = getDeniedPermissions(context, permissions);
         if (!deniedPermissions.isEmpty()) {
             fragment.requestPermissions(deniedPermissions.toArray(new String[0]), requestCode);
-            return true;
         }
-        return false;
+        return deniedPermissions;
     }
 
     /**
      * 申请权限
+     * <p>
+     * 如果调用了 {@link androidx.core.app.ActivityCompat#requestPermissions(Activity, String[], int)}
+     * 则结果会回调到 {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])}
      *
      * @param activity    Activity
      * @param requestCode 请求码
      * @param permissions 权限集合
-     * @return 是否调用了 {@link androidx.core.app.ActivityCompat#requestPermissions(Activity, String[], int)}
-     * true:    结果会回调到 {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])}
-     * false:   这些权限没必要申请
+     * @return 申请的权限列表，如果没有则返回空列表
      */
-    public static boolean requestPermissions(@NonNull Activity activity, int requestCode, @Nullable String... permissions) {
+    public static @NonNull
+    List<String> requestPermissions(@NonNull Activity activity, int requestCode, @Nullable List<String> permissions) {
         List<String> deniedPermissions = getDeniedPermissions(activity, permissions);
         if (!deniedPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(activity, deniedPermissions.toArray(new String[0]), requestCode);
-            return true;
         }
-        return false;
+        return deniedPermissions;
     }
 
     /**
-     * 获取"被禁用的权限"
+     * 获取"被禁用的权限"，如果没有则返回空列表。
      *
      * @param activity    Activity
      * @param permissions 权限列表
-     * @return "被禁用的权限"列表
+     * @return "被禁用的权限"列表，如果没有则返回空列表。
      */
     public static @NonNull
     List<String> getDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
@@ -84,17 +81,12 @@ public class TaoPermissionUtils {
         return disablePermissions;
     }
 
-    public static @NonNull
-    List<String> getDisablePermissions(@NonNull Activity activity, @Nullable String... permissions) {
-        return getDisablePermissions(activity, arr2List(permissions));
-    }
-
     /**
-     * 获取"被拒绝的权限"
+     * 获取"被拒绝的权限"，如果没有则返回空列表。
      *
      * @param context     上下文
      * @param permissions 权限列表
-     * @return "被拒绝的权限"列表
+     * @return "被拒绝的权限"列表，如果没有则返回空列表。
      */
     public static @NonNull
     List<String> getDeniedPermissions(@NonNull Context context, @Nullable List<String> permissions) {
@@ -109,11 +101,6 @@ public class TaoPermissionUtils {
         return deniedPermissions;
     }
 
-    public static @NonNull
-    List<String> getDeniedPermissions(@NonNull Context context, @Nullable String... permissions) {
-        return getDeniedPermissions(context, arr2List(permissions));
-    }
-
     /**
      * 是否权限版本
      *
@@ -123,15 +110,18 @@ public class TaoPermissionUtils {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
 
-    // ============================================================================
-    // private
-    // ============================================================================
-
+    /**
+     * 数组转列表
+     *
+     * @param arr  数组
+     * @param <DT> 元素数据类型
+     * @return 列表
+     */
     @SafeVarargs
-    private static <DT> List<DT> arr2List(DT... array) {
-        if (array != null) {
+    public static <DT> List<DT> arr2List(DT... arr) {
+        if (arr != null) {
             List<DT> list = new ArrayList<>();
-            Collections.addAll(list, array);
+            Collections.addAll(list, arr);
             return list;
         }
         return null;
