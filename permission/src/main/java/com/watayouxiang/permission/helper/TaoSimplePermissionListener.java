@@ -14,4 +14,9 @@ public class TaoSimplePermissionListener implements TaoPermissionListener {
     public void onDenied(@NonNull List<String> deniedPermissions) {
         
     }
+
+    @Override
+    public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
+
+    }
 }

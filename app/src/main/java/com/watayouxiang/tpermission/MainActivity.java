@@ -58,8 +58,18 @@ public class MainActivity extends ListActivity {
                             @Override
                             public void onDenied(@NonNull List<String> deniedPermissions) {
                                 new AlertDialog.Builder(v.getContext())
-                                        .setTitle("申请失败")
+                                        .setTitle("申请被拒绝")
                                         .setMessage(deniedPermissions.toString())
+                                        .setPositiveButton("确定", null)
+                                        .create()
+                                        .show();
+                            }
+
+                            @Override
+                            public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
+                                new AlertDialog.Builder(v.getContext())
+                                        .setTitle("申请被禁用")
+                                        .setMessage("被禁用：" + disabledPermissions.toString() + "，被拒绝：" + deniedPermissions.toString())
                                         .setPositiveButton("确定", null)
                                         .create()
                                         .show();

@@ -11,10 +11,17 @@ public interface TaoPermissionListener {
     void onGranted();
 
     /**
-     * 被拒绝权限
+     * 权限被拒绝
      *
-     * @param deniedPermissions 被拒绝权限集合。
-     *                          deniedPermissions不为空，并且deniedPermissions长度大于0。
+     * @param deniedPermissions 被拒绝的权限列表（不为空，长度大于0）
      */
     void onDenied(@NonNull List<String> deniedPermissions);
+
+    /**
+     * 权限被禁用
+     *
+     * @param disabledPermissions 被禁用的权限列表（不为空，长度大于0）
+     * @param deniedPermissions   被拒绝的权限列表（不为空，长度大于等于0）
+     */
+    void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions);
 }

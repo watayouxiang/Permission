@@ -1,12 +1,14 @@
 package com.watayouxiang.permission.helper;
 
 import android.app.Activity;
+import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.watayouxiang.permission.TaoPermissionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 abstract class PermissionHelper<T> {
@@ -58,13 +60,29 @@ abstract class PermissionHelper<T> {
      */
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == mRequestCode) {
-            List<String> deniedPermissions = TaoPermissionUtils.filterDeniedPermissions(permissions, grantResults);
-            if (deniedPermissions.isEmpty()) {
+            //获取"被拒绝的权限"、"被禁用的权限"
+            List<String> deniedPermissions = new ArrayList<>();
+            List<String> disabledPermissions = new ArrayList<>();
+            if (permissions.length == grantResults.length && TaoPermissionUtils.isPermissionVersion()) {
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        if (!TaoPermissionUtils.shouldShowRequestPermissionRationale(getActivity(), permissions[i])) {
+                            disabledPermissions.add(permissions[i]);
+                        } else {
+                            deniedPermissions.add(permissions[i]);
+                        }
+                    }
+                }
+            }
+            if (deniedPermissions.isEmpty() && disabledPermissions.isEmpty()) {
                 if (mPermissionListener != null) {
                     mPermissionListener.onGranted();
                 }
+            } else if (!disabledPermissions.isEmpty()) {
+                if (mPermissionListener != null) {
+                    mPermissionListener.onDisabled(disabledPermissions, deniedPermissions);
+                }
             } else {
-                boolean haveBanPermission = TaoPermissionUtils.haveBanPermission(getActivity(), permissions);
                 if (mPermissionListener != null) {
                     mPermissionListener.onDenied(deniedPermissions);
                 }
