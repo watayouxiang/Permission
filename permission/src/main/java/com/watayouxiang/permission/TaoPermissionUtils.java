@@ -69,11 +69,10 @@ public class TaoPermissionUtils {
     public static @NonNull
     List<String> filterDisablePermissions(@NonNull Activity activity, @Nullable List<String> permissions) {
         List<String> disablePermissions = new ArrayList<>();
-        if (isPermissionVersion()) {
-            List<String> deniedPermissions = filterDeniedPermissions(activity, permissions);
-            for (String deniedPermission : deniedPermissions) {
-                if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, deniedPermission)) {
-                    disablePermissions.add(deniedPermission);
+        if (permissions != null) {
+            for (String permission : permissions) {
+                if (isDisablePermissions(activity, permission)) {
+                    disablePermissions.add(permission);
                 }
             }
         }
@@ -101,6 +100,17 @@ public class TaoPermissionUtils {
     }
 
     /**
+     * 是否是"被禁用权限"
+     *
+     * @param activity   Activity
+     * @param permission 权限
+     * @return 是否是"被禁用权限"
+     */
+    public static boolean isDisablePermissions(@NonNull Activity activity, @NonNull String permission) {
+        return isDeniedPermission(activity, permission) && !ActivityCompat.shouldShowRequestPermissionRationale(activity, permission);
+    }
+
+    /**
      * 是否是"被拒绝权限"
      *
      * @param context    上下文
@@ -108,10 +118,7 @@ public class TaoPermissionUtils {
      * @return 是否是"被拒绝权限"
      */
     public static boolean isDeniedPermission(@NonNull Context context, @NonNull String permission) {
-        if (isPermissionVersion()) {
-            return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED;
-        }
-        return false;
+        return isPermissionVersion() && ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED;
     }
 
     /**
