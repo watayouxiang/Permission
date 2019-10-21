@@ -58,7 +58,7 @@ public class MainActivity extends ListActivity {
                             @Override
                             public void onDenied(@NonNull List<String> deniedPermissions) {
                                 new AlertDialog.Builder(v.getContext())
-                                        .setTitle("申请被拒绝")
+                                        .setTitle("权限被拒绝")
                                         .setMessage(deniedPermissions.toString())
                                         .setPositiveButton("确定", null)
                                         .create()
@@ -68,7 +68,7 @@ public class MainActivity extends ListActivity {
                             @Override
                             public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
                                 new AlertDialog.Builder(v.getContext())
-                                        .setTitle("申请被禁用")
+                                        .setTitle("权限被禁用")
                                         .setMessage("被禁用：" + disabledPermissions.toString() + "，被拒绝：" + deniedPermissions.toString())
                                         .setPositiveButton("确定", null)
                                         .create()
@@ -77,7 +77,7 @@ public class MainActivity extends ListActivity {
                         });
                     }
                 })
-                .addClick("打开设置弹窗", new View.OnClickListener() {
+                .addClick("打开【设置弹窗】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new AppSettingsDialog.Builder(MainActivity.this)
@@ -91,7 +91,7 @@ public class MainActivity extends ListActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
-            Toast.makeText(MainActivity.this, "onActivityResult", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, "【设置弹窗】的回调", Toast.LENGTH_SHORT).show();
         }
     }
 
