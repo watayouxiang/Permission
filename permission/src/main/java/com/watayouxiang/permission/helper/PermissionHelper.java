@@ -27,8 +27,17 @@ abstract class PermissionHelper<T> {
         return mHost;
     }
 
-    public void requestPermissions(@Nullable List<String> permissions, @Nullable TaoPermissionListener listener) {
-        requestPermissions(permissions, DEFAULT_PERMISSION_REQ_CODE, listener);
+    public void requestPermissions(@Nullable List<String> permissions) {
+        requestPermissions(permissions, DEFAULT_PERMISSION_REQ_CODE);
+    }
+
+    /**
+     * 设置权限申请结果的监听
+     *
+     * @param listener 监听器
+     */
+    public void setPermissionListener(@Nullable TaoPermissionListener listener) {
+        mPermissionListener = listener;
     }
 
     /**
@@ -36,10 +45,8 @@ abstract class PermissionHelper<T> {
      *
      * @param permissions 待申请的权限列表
      * @param requestCode 请求码
-     * @param listener    监听器
      */
-    public void requestPermissions(@Nullable List<String> permissions, int requestCode, @Nullable TaoPermissionListener listener) {
-        mPermissionListener = listener;
+    public void requestPermissions(@Nullable List<String> permissions, int requestCode) {
         mRequestCode = requestCode;
         if (startRequestPermissions(requestCode, permissions).isEmpty()) {
             if (mPermissionListener != null) {

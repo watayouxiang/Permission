@@ -2,6 +2,7 @@ package com.watayouxiang.tpermission;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -29,6 +30,33 @@ public class MainActivity extends ListActivity {
     private TaoActivityPermissionHelper mHelper = new TaoActivityPermissionHelper(this);
 
     @Override
+    protected void initView(Bundle savedInstanceState) {
+        super.initView(savedInstanceState);
+        mHelper.setPermissionListener(new TaoPermissionListener() {
+            @Override
+            public void onGranted() {
+                Toast.makeText(MainActivity.this, "申请结果：成功", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDenied(@NonNull List<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, "申请结果：被拒绝", Toast.LENGTH_SHORT).show();
+                mHelper.requestPermissions(deniedPermissions);
+            }
+
+            @Override
+            public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, "申请结果：被禁用", Toast.LENGTH_SHORT).show();
+                new AppSettingsDialog.Builder(MainActivity.this)
+                        .setTitle("权限被禁用，需前往设置页开启")
+                        .setRationale("被禁用的权限：" + disabledPermissions.toString() + "，被拒绝的权限：" + deniedPermissions.toString())
+                        .build()
+                        .show();
+            }
+        });
+    }
+
+    @Override
     protected ListData getListData() {
         return new ListData()
                 .addSection("申请以下权限")
@@ -46,43 +74,18 @@ public class MainActivity extends ListActivity {
                                 .show();
                     }
                 })
-                .addClick("申请权限", new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        mHelper.requestPermissions(mPermissions, new TaoPermissionListener() {
-                            @Override
-                            public void onGranted() {
-                                Toast.makeText(MainActivity.this, "申请权限：成功", Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void onDenied(@NonNull List<String> deniedPermissions) {
-                                new AlertDialog.Builder(v.getContext())
-                                        .setTitle("申请权限：被拒绝")
-                                        .setMessage(deniedPermissions.toString())
-                                        .setPositiveButton("确定", null)
-                                        .create()
-                                        .show();
-                            }
-
-                            @Override
-                            public void onDisabled(@NonNull List<String> disabledPermissions, @NonNull List<String> deniedPermissions) {
-                                new AlertDialog.Builder(v.getContext())
-                                        .setTitle("申请权限：被禁用")
-                                        .setMessage("禁用权限：" + disabledPermissions.toString() + "，拒绝权限：" + deniedPermissions.toString())
-                                        .setPositiveButton("确定", null)
-                                        .create()
-                                        .show();
-                            }
-                        });
-                    }
-                })
                 .addClick("打开【设置弹窗】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         new AppSettingsDialog.Builder(MainActivity.this)
                                 .build()
                                 .show();
+                    }
+                })
+                .addClick("申请权限", new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        mHelper.requestPermissions(mPermissions);
                     }
                 });
     }
