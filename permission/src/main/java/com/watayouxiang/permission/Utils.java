@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class TaoUtils {
+class Utils {
     /**
      * 数组转列表
      *

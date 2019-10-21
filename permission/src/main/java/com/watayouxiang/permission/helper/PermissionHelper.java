@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 abstract class PermissionHelper<T> {
-    public static final int DEFAULT_PERMISSION_REQ_CODE = 13031;
+    private static final int DEFAULT_PERMISSION_REQ_CODE = 13031;
 
     private TaoPermissionListener mPermissionListener;
     private int mRequestCode;
@@ -26,18 +26,18 @@ abstract class PermissionHelper<T> {
         return mHost;
     }
 
-    public void requestPermissions(@Nullable TaoPermissionListener listener, @Nullable List<String> permissions) {
-        requestPermissions(listener, DEFAULT_PERMISSION_REQ_CODE, permissions);
+    public void requestPermissions(@Nullable List<String> permissions, @Nullable TaoPermissionListener listener) {
+        requestPermissions(permissions, DEFAULT_PERMISSION_REQ_CODE, listener);
     }
 
     /**
      * 申请权限
      *
-     * @param listener    监听器
-     * @param requestCode 请求码
      * @param permissions 待申请的权限列表
+     * @param requestCode 请求码
+     * @param listener    监听器
      */
-    public void requestPermissions(@Nullable TaoPermissionListener listener, int requestCode, @Nullable List<String> permissions) {
+    public void requestPermissions(@Nullable List<String> permissions, int requestCode, @Nullable TaoPermissionListener listener) {
         mPermissionListener = listener;
         mRequestCode = requestCode;
         if (startRequestPermissions(requestCode, permissions).isEmpty()) {
