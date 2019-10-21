@@ -1,4 +1,4 @@
-package com.watayouxiang.permission;
+package com.watayouxiang.permission.helper;
 
 import androidx.annotation.NonNull;
 

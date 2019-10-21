@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class TaoPermissionUtils {
@@ -108,22 +107,5 @@ public class TaoPermissionUtils {
      */
     public static boolean isPermissionVersion() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
-    }
-
-    /**
-     * 数组转列表
-     *
-     * @param arr  数组
-     * @param <DT> 元素数据类型
-     * @return 列表
-     */
-    @SafeVarargs
-    public static <DT> List<DT> arr2List(DT... arr) {
-        if (arr != null) {
-            List<DT> list = new ArrayList<>();
-            Collections.addAll(list, arr);
-            return list;
-        }
-        return null;
     }
 }
