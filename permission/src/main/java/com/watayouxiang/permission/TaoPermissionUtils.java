@@ -15,6 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TaoPermissionUtils {
+
+    // =================================================================================
+    // 基本方法
+    // =================================================================================
+
     /**
      * 申请权限
      * <p>
@@ -55,30 +60,6 @@ public class TaoPermissionUtils {
         List<String> deniedPermissions = filterDeniedPermissions(activity, permissions);
         if (!deniedPermissions.isEmpty()) {
             ActivityCompat.requestPermissions(activity, deniedPermissions.toArray(new String[0]), requestCode);
-        }
-        return deniedPermissions;
-    }
-
-    /**
-     * 筛选出"被拒绝权限"列表
-     * <p>
-     * 在 {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])} 方法中使用
-     *
-     * @param permissions  权限列表
-     * @param grantResults 授予结果
-     * @return "被拒绝权限"列表，如果没有则返回空列表。
-     */
-    public static @NonNull
-    List<String> filterDeniedPermissions(@Nullable String[] permissions, @Nullable int[] grantResults) {
-        List<String> deniedPermissions = new ArrayList<>();
-        if (permissions != null && grantResults != null
-                && permissions.length == grantResults.length
-                && TaoPermissionUtils.isPermissionVersion()) {
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                    deniedPermissions.add(permissions[i]);
-                }
-            }
         }
         return deniedPermissions;
     }
@@ -134,4 +115,51 @@ public class TaoPermissionUtils {
     public static boolean isPermissionVersion() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
     }
+
+    // =================================================================================
+    // 在 onRequestPermissionsResult 方法中使用
+    // =================================================================================
+
+    /**
+     * 筛选出"被拒绝权限"列表
+     * <p>
+     * 注意：在 {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])} 方法中使用
+     *
+     * @param permissions  权限列表
+     * @param grantResults 授予结果
+     * @return "被拒绝权限"列表，如果没有则返回空列表。
+     */
+    public static @NonNull
+    List<String> filterDeniedPermissions(@Nullable String[] permissions, @Nullable int[] grantResults) {
+        List<String> deniedPermissions = new ArrayList<>();
+        if (permissions != null && grantResults != null
+                && permissions.length == grantResults.length
+                && TaoPermissionUtils.isPermissionVersion()) {
+            for (int i = 0; i < grantResults.length; i++) {
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                    deniedPermissions.add(permissions[i]);
+                }
+            }
+        }
+        return deniedPermissions;
+    }
+
+    /**
+     * 是否存在"被禁止的权限"
+     * <p>
+     * 注意：在 {@link android.app.Activity#onRequestPermissionsResult(int, String[], int[])} 方法中使用
+     *
+     * @param activity    Activity
+     * @param permissions 权限数组
+     * @return true 存在，false 不存在
+     */
+    public static boolean haveBanPermission(@NonNull Activity activity, @Nullable String[] permissions) {
+        if (permissions != null) {
+            for (String permission : permissions) {
+                return isDeniedPermission(activity, permission) && !shouldShowRequestPermissionRationale(activity, permission);
+            }
+        }
+        return false;
+    }
+
 }
