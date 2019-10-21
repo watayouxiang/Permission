@@ -90,14 +90,28 @@ public class TaoPermissionUtils {
     public static @NonNull
     List<String> filterDeniedPermissions(@NonNull Context context, @Nullable List<String> permissions) {
         List<String> deniedPermissions = new ArrayList<>();
-        if (permissions != null && isPermissionVersion()) {
+        if (permissions != null) {
             for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                if (isDeniedPermission(context, permission)) {
                     deniedPermissions.add(permission);
                 }
             }
         }
         return deniedPermissions;
+    }
+
+    /**
+     * 是否是"被拒绝权限"
+     *
+     * @param context    上下文
+     * @param permission 权限
+     * @return 是否是"被拒绝权限"
+     */
+    public static boolean isDeniedPermission(@NonNull Context context, @NonNull String permission) {
+        if (isPermissionVersion()) {
+            return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_DENIED;
+        }
+        return false;
     }
 
     /**
