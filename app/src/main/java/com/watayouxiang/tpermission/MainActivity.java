@@ -10,40 +10,40 @@ import androidx.annotation.Nullable;
 
 import com.watayouxiang.demoshell.ListActivity;
 import com.watayouxiang.demoshell.ListData;
-import com.watayouxiang.permission.PermissionHelper;
-import com.watayouxiang.permission.TaoPermissionListener;
-import com.watayouxiang.permission.dialog.AppSettingsDialog;
 import com.watayouxiang.permission.TaoPermissionUtils;
+import com.watayouxiang.permission.dialog.AppSettingsDialog;
+import com.watayouxiang.permission.helper.TaoActivityPermissionHelper;
+import com.watayouxiang.permission.helper.TaoPermissionListener;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
-    private String[] mPermission = {
+    private List<String> mPermissions = Arrays.asList(
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA,
-    };
-    private PermissionHelper mHelper = new PermissionHelper(this);
+            Manifest.permission.CAMERA
+    );
+    private TaoActivityPermissionHelper mHelper = new TaoActivityPermissionHelper(this);
 
     @Override
     protected ListData getListData() {
         return new ListData()
-                .addSection(Arrays.toString(mPermission))
+                .addSection(mPermissions.toString())
                 .addClick("获取【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> deniedPermissions = TaoPermissionUtils.getDeniedPermissions(MainActivity.this, mPermission);
+                        List<String> deniedPermissions = TaoPermissionUtils.getDeniedPermissions(MainActivity.this, mPermissions);
                         Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addClick("获取【被禁用的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> disablePermissions = TaoPermissionUtils.getDisablePermissions(MainActivity.this, mPermission);
+                        List<String> disablePermissions = TaoPermissionUtils.getDisablePermissions(MainActivity.this, mPermissions);
                         Toast.makeText(MainActivity.this, disablePermissions.toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -60,7 +60,7 @@ public class MainActivity extends ListActivity {
                             public void onDenied(@NonNull List<String> deniedPermissions) {
                                 Toast.makeText(MainActivity.this, deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
                             }
-                        }, mPermission);
+                        }, mPermissions);
                     }
                 })
                 .addClick("打开设置弹窗", new View.OnClickListener() {

@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.watayouxiang.permission.TaoPermissionUtils;
-import com.watayouxiang.permission.TaoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,8 @@ abstract class PermissionHelper<T> {
         return mHost;
     }
 
-    public void requestPermissions(@Nullable TaoPermissionListener listener, @Nullable String... permissions) {
-        requestPermissions(listener, DEFAULT_PERMISSION_REQ_CODE, TaoUtils.arr2List(permissions));
+    public void requestPermissions(@Nullable TaoPermissionListener listener, @Nullable List<String> permissions) {
+        requestPermissions(listener, DEFAULT_PERMISSION_REQ_CODE, permissions);
     }
 
     /**
