@@ -60,10 +60,9 @@ public class MainActivity extends ListActivity {
                 .addClick("筛选出【被拒绝的权限】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        List<String> deniedPermissions = TaoPermissionUtils.filterDeniedPermissions(MainActivity.this, mPermissions);
                         new AlertDialog.Builder(v.getContext())
                                 .setTitle("被拒绝的权限")
-                                .setMessage(deniedPermissions.toString())
+                                .setMessage(TaoPermissionUtils.filterDeniedPermissions(MainActivity.this, mPermissions).toString())
                                 .setPositiveButton("确定", null)
                                 .create()
                                 .show();
