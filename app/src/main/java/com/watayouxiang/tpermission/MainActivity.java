@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
-    private MainActivity activity = this;
     private List<String> mPermissions = Arrays.asList(
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -71,7 +70,7 @@ public class MainActivity extends ListActivity {
                 .addClick("打开【设置弹窗】", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new AppSettingsDialog.Builder(activity)
+                        new AppSettingsDialog.Builder(MainActivity.this)
                                 .build()
                                 .show();
                     }

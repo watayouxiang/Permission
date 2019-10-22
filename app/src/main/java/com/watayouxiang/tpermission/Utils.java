@@ -1,4 +1,4 @@
-package com.watayouxiang.permission;
+package com.watayouxiang.tpermission;
 
 import androidx.annotation.Nullable;
 
