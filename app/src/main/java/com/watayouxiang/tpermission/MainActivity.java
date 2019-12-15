@@ -21,6 +21,16 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends ListActivity {
+    @Override
+    protected CharSequence getPageTitle() {
+        return getResources().getString(R.string.app_name);
+    }
+
+    @Override
+    protected boolean showBackBtn() {
+        return false;
+    }
+
     private List<String> mPermissions = Arrays.asList(
             Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
